@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
     // const resend = new Resend(process.env.RESEND_API_KEY);
     // await resend.emails.send({
     //   from: 'portfolio@yourdomain.com',
-    //   to:   'gracewang@gatech.edu',
+    //   to:   'gwang426@gatech.edu',
     //   subject: `Portfolio contact from ${name}`,
     //   text: `From: ${name} <${email}>\n\n${message}`,
     // });
