@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grace Wang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo" onclick="showPage('home')">Grace Wang</span>
+    <ul class="nav-links">
+      <li><a onclick="showPage('home')" data-page="home">Home</a></li>
+      <li><a onclick="showPage('about')" data-page="about">About</a></li>
+      <li><a onclick="showPage('projects')" data-page="projects">Projects</a></li>
+      <li><a onclick="showPage('blog')" data-page="blog">Blog</a></li>
+      <li><a onclick="showPage('library')" data-page="library">Library</a></li>
+      <li><a onclick="showPage('contact')" data-page="contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ======================================================= HOME ======================================================= -->
+<div id="page-home" class="page active">
+
+  <div class="hobby-strip">
+    <div class="hobby-track" id="hobbyTrack">
+      <span class="hobby-item" data-icon="origami">Origami</span>
+      <span class="hobby-item" data-icon="hiking">Hiking</span>
+      <span class="hobby-item" data-icon="reading">Reading</span>
+      <span class="hobby-item" data-icon="ai">AI / ML</span>
+      <span class="hobby-item" data-icon="music">Music</span>
+      <span class="hobby-item" data-icon="nature">Nature</span>
+      <span class="hobby-item" data-icon="policy">Policy</span>
+      <span class="hobby-item" data-icon="research">Research</span>
+      <span class="hobby-item" data-icon="origami">Origami</span>
+      <span class="hobby-item" data-icon="hiking">Hiking</span>
+      <span class="hobby-item" data-icon="reading">Reading</span>
+      <span class="hobby-item" data-icon="ai">AI / ML</span>
+      <span class="hobby-item" data-icon="music">Music</span>
+      <span class="hobby-item" data-icon="nature">Nature</span>
+      <span class="hobby-item" data-icon="policy">Policy</span>
+      <span class="hobby-item" data-icon="research">Research</span>
+    </div>
+  </div>
+
+  <div class="wrap hero-wrap">
+    <!-- Polished SVG origami animation (replaces old crane canvas) -->
+    <div class="hero-svg-stage" id="heroSvgStage" aria-hidden="true"></div>
+
+    <div class="hero-grid">
+      <!-- LEFT: text content -->
+      <div class="hero-left" style="position:relative;z-index:1;">
+        <div class="hero-kicker reveal"><span class="hero-kicker-line"></span>2nd Year Computer Science @ Georgia Tech · Expected Fall 2028</div>
+        <h1 class="hero-name reveal" style="transition-delay:.07s">Grace<br/><em>Wang.</em></h1>
+        <p class="hero-sub reveal" style="transition-delay:.14s">I build intelligent systems that close the gap between what technology can do and what it should do — from multi-agent AI to wearable hardware to tech policy.</p>
+        <div class="hero-actions reveal" style="transition-delay:.2s">
+          <button class="btn btn-dark" onclick="showPage('projects')">View My Work</button>
+          <button class="btn btn-outline" onclick="showPage('blog')">Read My Writing</button>
+        </div>
+        <div class="availability reveal" style="transition-delay:.26s">
+          <span class="availability-tag">Open</span>
+          <span>to Summer 2027 internships in SWE, AI/ML, or Data</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: portrait
+           INSTRUCTIONS: Replace images/me.png with your own photo.
+           Recommended: square or portrait-crop, min 600×600px, no heavy background.
+           The CSS handles the circular clip and border styling. -->
+      <div class="hero-right reveal" style="transition-delay:.18s">
+        <div class="hero-photo">
+          <img src="images/me.png" alt="Grace Wang" onerror="this.parentElement.style.display='none'"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr"/>
+
+  <div class="wrap">
+    <div class="eyebrow reveal">Selected work</div>
+    <div class="featured-grid reveal" style="transition-delay:.05s">
+      <div class="featured-item" onclick="showPage('projects')">
+        <div class="fi-label">AI / Backend · Google</div>
+        <div class="fi-title">Multi-Agent AI Travel Planner</div>
+        <div class="fi-desc">BigQuery, Vertex AI, Google ADK. End-to-end personalized itinerary generation with memory persistence across sessions.</div>
+        <span class="fi-arr"><i data-lucide="arrow-up-right" style="width:15px;height:15px;"></i></span>
+      </div>
+      <div class="featured-item" onclick="showPage('projects')">
+        <div class="fi-label">Research · Georgia Tech</div>
+        <div class="fi-title">Sparse Tensor Benchmark Suite</div>
+        <div class="fi-desc">Cut CP-ALS complexity from O(I·J·K·R) to O(nnz·R). Verified reconstruction error below 10%.</div>
+        <span class="fi-arr"><i data-lucide="arrow-up-right" style="width:15px;height:15px;"></i></span>
+      </div>
+      <div class="featured-item" onclick="showPage('projects')">
+        <div class="fi-label">IoT / Hardware · MedTech Hack</div>
+        <div class="fi-title">Vibroacoustic Therapy Device</div>
+        <div class="fi-desc">5th place. TMJ disorder wearable, ~90% cost reduction. Flask backend + real-time biometric dashboard.</div>
+        <span class="fi-arr"><i data-lucide="arrow-up-right" style="width:15px;height:15px;"></i></span>
+      </div>
+      <div class="featured-item" onclick="showPage('blog')">
+        <div class="fi-label">Latest writing</div>
+        <div class="fi-title">What I learned building multi-agent AI at Google</div>
+        <div class="fi-desc">Shipping real products with ADK and Vertex AI — what changes when demos become architecture.</div>
+        <span class="fi-arr"><i data-lucide="arrow-up-right" style="width:15px;height:15px;"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= ABOUT ======================================================= -->
+<div id="page-about" class="page">
+  <div class="wrap">
+    <div class="eyebrow reveal">About</div>
+    <div class="about-two-col">
+      <div class="about-bio reveal">
+        <p>I'm a sophomore at Georgia Tech studying Computer Science with concentrations in Artificial Intelligence and Information Internetworks. I care about building software that actually solves something — not just demos that look good in a pitch deck.</p>
+        <p>This past summer I interned at Google through Break Through Tech, where I shipped end-to-end features for a conversational AI travel app built on multi-agent systems, BigQuery, and Vertex AI. Before that I spent a semester doing research on sparse tensor benchmarks — the kind of work that makes you appreciate both mathematical elegance and stubborn performance realities.</p>
+        <p>Outside of code, I write about tech policy and co-authored a peer-reviewed memo on AI-enhanced disinformation threats to critical infrastructure, accepted to the <em>Journal of Science Policy &amp; Governance</em>. I fold origami when I need to think, and I hike whenever Atlanta's trails will have me.</p>
+        <p>I'm looking for Summer 2027 roles in software engineering, AI/ML engineering, or research.</p>
+      </div>
+      <div class="reveal" style="transition-delay:.1s">
+        <div class="skills-group">
+          <div class="skills-label">Languages</div>
+          <div class="chips"><span class="chip">Python</span><span class="chip">Java</span><span class="chip">JavaScript</span><span class="chip">C#</span><span class="chip">SQL</span><span class="chip">HTML / CSS</span></div>
+        </div>
+        <div class="skills-group">
+          <div class="skills-label">Frameworks &amp; Libraries</div>
+          <div class="chips"><span class="chip">Flask</span><span class="chip">React</span><span class="chip">Spring Boot</span><span class="chip">Pandas</span><span class="chip">NumPy</span><span class="chip">Scikit-Learn</span><span class="chip">Chart.js</span></div>
+        </div>
+        <div class="skills-group">
+          <div class="skills-label">Tools &amp; Platforms</div>
+          <div class="chips"><span class="chip">Git / GitHub</span><span class="chip">Google Cloud</span><span class="chip">BigQuery</span><span class="chip">Vertex AI</span><span class="chip">Jupyter</span><span class="chip">Arduino</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="now-block reveal">
+      <div class="now-heading">Currently...</div>
+      <div class="now-grid">
+        <div class="now-col">
+          <div class="now-col-label"><i data-lucide="book-open" style="width:12px;height:12px;"></i> Reading</div>
+          <div class="now-entry"><em>The Alignment Problem</em> — Brian Christian (rereading)</div>
+          <div class="now-entry"><em>Range</em> — David Epstein</div>
+        </div>
+        <div class="now-col">
+          <div class="now-col-label"><i data-lucide="terminal" style="width:12px;height:12px;"></i> Building</div>
+          <div class="now-entry">Deepening ML fundamentals — neural nets, fine-tuning</div>
+          <div class="now-entry">This portfolio</div>
+        </div>
+        <div class="now-col">
+          <div class="now-col-label"><i data-lucide="sprout" style="width:12px;height:12px;"></i> Learning</div>
+          <div class="now-entry">Generative AI Fundamentals — Udacity × Accenture</div>
+          <div class="now-entry">Sophomore CS core at Georgia Tech</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="eyebrow" style="margin-bottom:0;">Experience</div>
+      <div class="tl-item reveal">
+        <div class="tl-date">May – Jul 2026</div>
+        <div><span class="tl-badge tb-work">Internship</span>
+          <div class="tl-title">Software Engineer Intern — Google</div>
+          <div class="tl-desc">Break Through Tech Fellow. Architected BigQuery datasets, built multi-agent features with Google ADK and Vertex AI, shipped personalized itinerary generation end-to-end on a cross-functional Sprinternship team.</div>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">Aug – Dec 2025</div>
+        <div><span class="tl-badge tb-research">Research</span>
+          <div class="tl-title">Undergraduate Research Assistant — Georgia Tech</div>
+          <div class="tl-desc">Advised by Dr. Willow Ahrens. Extended open-source Python benchmark suite for sparse tensor frameworks, adding CP-ALS decomposition support and cutting complexity from O(I·J·K·R) to O(nnz·R).</div>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">Aug 2025 – May 2026</div>
+        <div><span class="tl-badge tb-research">Policy</span>
+          <div class="tl-title">Policy Analyst — GT Science &amp; Technology Policy Committee</div>
+          <div class="tl-desc">Co-authored a peer-reviewed policy memo on AI-enhanced disinformation threats to U.S. critical infrastructure. Accepted to Journal of Science Policy &amp; Governance (Winter issue).</div>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">Sep 2025</div>
+        <div><span class="tl-badge tb-project">Hackathon</span>
+          <div class="tl-title">5th Place — MedTech Hack</div>
+          <div class="tl-desc">Led software development on a wearable vibroacoustic therapy device for TMJ disorder. ~90% cost reduction vs. clinical alternatives. Python/Flask backend, real-time IoT sensor ingestion, Chart.js biometric dashboard.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hobbies-section reveal">
+      <div class="eyebrow">Outside of code</div>
+      <div class="hobby-cards">
+        <div class="hobby-card reveal" style="transition-delay:.04s">
+          <div class="hobby-card-icon"><i data-lucide="triangle" style="width:18px;height:18px;"></i></div>
+          <div class="hobby-card-name">Origami</div>
+          <div class="hobby-card-note">Folding cranes when I need to think. There's something about converting a flat sheet into structure that mirrors what I love about software.</div>
+        </div>
+        <div class="hobby-card reveal" style="transition-delay:.09s">
+          <div class="hobby-card-icon"><i data-lucide="mountain" style="width:18px;height:18px;"></i></div>
+          <div class="hobby-card-name">Hiking</div>
+          <div class="hobby-card-note">Stone Mountain, Kennesaw, the Appalachian Trail when I can. Best thinking happens away from a screen.</div>
+        </div>
+        <div class="hobby-card reveal" style="transition-delay:.14s">
+          <div class="hobby-card-icon"><i data-lucide="book" style="width:18px;height:18px;"></i></div>
+          <div class="hobby-card-name">Reading</div>
+          <div class="hobby-card-note">Heavy on nonfiction — AI, policy, biography. See the Library tab for what I've actually read and what I actually thought.</div>
+        </div>
+        <div class="hobby-card reveal" style="transition-delay:.19s">
+          <div class="hobby-card-icon"><i data-lucide="music" style="width:18px;height:18px;"></i></div>
+          <div class="hobby-card-name">Music</div>
+          <div class="hobby-card-note">Mostly indie and lo-fi when coding, classical when reading. The playlist reflects the task.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= PROJECTS ======================================================= -->
+<div id="page-projects" class="page">
+  <div class="wrap">
+    <div class="eyebrow reveal">Work</div>
+    <h2 class="section-title reveal">Things I've built.</h2>
+    <div class="controls-bar reveal">
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter="all"><i data-lucide="layout-grid" style="width:11px;height:11px;"></i> All</button>
+        <button class="filter-btn" data-filter="ai"><i data-lucide="cpu" style="width:11px;height:11px;"></i> AI / ML</button>
+        <button class="filter-btn" data-filter="systems"><i data-lucide="database" style="width:11px;height:11px;"></i> Systems</button>
+        <button class="filter-btn" data-filter="hardware"><i data-lucide="circuit-board" style="width:11px;height:11px;"></i> Hardware</button>
+        <button class="filter-btn" data-filter="research"><i data-lucide="microscope" style="width:11px;height:11px;"></i> Research</button>
+        <button class="filter-btn" data-filter="policy"><i data-lucide="scroll" style="width:11px;height:11px;"></i> Policy</button>
+      </div>
+      <div class="search-wrap">
+        <i data-lucide="search" class="s-icon" style="width:12px;height:12px;"></i>
+        <input class="search-input" type="text" placeholder="Search projects…" id="projectSearch" oninput="filterProjects()"/>
+      </div>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+      <div class="project-card" data-accent="indigo" data-tags="ai" data-text="ai travel planning google sprinternship bigquery vertex multi-agent">
+        <div class="p-type">AI / Backend · Google</div>
+        <div class="p-title">Multi-Agent AI Travel Planner</div>
+        <div class="p-desc">Conversational travel planner with memory persistence and personalized itinerary generation. Shipped activities, dining, and itinerary modules end-to-end on a cross-functional Sprinternship team.</div>
+        <div class="tech-chips"><span class="tech-chip">Python</span><span class="tech-chip">Google ADK</span><span class="tech-chip">BigQuery</span><span class="tech-chip">Vertex AI</span><span class="tech-chip">A2UI</span></div>
+        <div class="p-links"><span style="font-size:.73rem;color:var(--subtle);">Private — Google project</span></div>
+      </div>
+      <div class="project-card" data-accent="teal" data-tags="research" data-text="sparse tensor benchmark cp-als numpy python pytest research">
+        <div class="p-type">Research / Systems · Georgia Tech</div>
+        <div class="p-title">Sparse Tensor Benchmark Suite</div>
+        <div class="p-desc">Extended open-source Python benchmark suite for CP-ALS decomposition on sparse 3rd-order tensors. Cut complexity from O(I·J·K·R) to O(nnz·R). Verified &lt;10% reconstruction error on 20×20×20 rank-3 tensors.</div>
+        <div class="tech-chips"><span class="tech-chip">Python</span><span class="tech-chip">pytest</span><span class="tech-chip">NumPy</span><span class="tech-chip">Sparse Arrays</span></div>
+        <div class="p-links"><a href="https://github.com/GraceW18" target="_blank" class="p-link">GitHub <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i></a></div>
+      </div>
+      <div class="project-card" data-accent="indigo" data-tags="systems" data-text="nosql database java hashmap avl tree lru eviction dynamodb">
+        <div class="p-type">Systems / Data Structures</div>
+        <div class="p-title">NoSQL Database Engine</div>
+        <div class="p-desc">Custom Java NoSQL engine modeled after Amazon DynamoDB. Linear-probing HashMap, AVL TreeMap with O(log n + k) range queries, partitioned database with LRU eviction and peak occupancy analysis.</div>
+        <div class="tech-chips"><span class="tech-chip">Java</span><span class="tech-chip">HashMap</span><span class="tech-chip">AVL Tree</span><span class="tech-chip">LRU Cache</span></div>
+        <div class="p-links"><span style="font-size:.73rem;color:var(--subtle);">Coursework — CS 1332</span></div>
+      </div>
+      <div class="project-card" data-accent="teal" data-tags="hardware ai" data-text="vibroacoustic therapy tmj iot flask chart.js arduino medtech hackathon">
+        <div class="p-type">IoT / Hardware · MedTech Hack (5th)</div>
+        <div class="p-title">Vibroacoustic Therapy Device</div>
+        <div class="p-desc">Wearable for TMJ disorder, ~90% cost reduction vs. clinical devices. Python/Flask backend ingesting real-time IoT sensor data, Chart.js biometric dashboard tracking 30-day treatment cycles.</div>
+        <div class="tech-chips"><span class="tech-chip">Python</span><span class="tech-chip">Flask</span><span class="tech-chip">Chart.js</span><span class="tech-chip">Arduino</span><span class="tech-chip">IoT</span></div>
+        <div class="p-links"><a href="https://github.com/GraceW18/vibroacoustic-therapy-device" target="_blank" class="p-link">GitHub <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i></a></div>
+      </div>
+      <div class="project-card" data-accent="indigo" data-tags="ai" data-text="prospera investing gemini chatbot budgeting finance web app">
+        <div class="p-type">Web App / AI</div>
+        <div class="p-title">Prospera</div>
+        <div class="p-desc">Web app providing personalized investing suggestions based on current funds and goals. Built-in Gemini chatbot named Penny, tailored toward budgeting and financial literacy for first-time investors.</div>
+        <div class="tech-chips"><span class="tech-chip">HTML/JS</span><span class="tech-chip">Gemini API</span><span class="tech-chip">Finance</span></div>
+        <div class="p-links"><a href="https://github.com/etumanova/prospera" target="_blank" class="p-link">GitHub <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i></a></div>
+      </div>
+      <div class="project-card" data-accent="teal" data-tags="policy" data-text="ai disinformation policy critical infrastructure cisa federal jspg journal">
+        <div class="p-type">Policy / Writing · Published</div>
+        <div class="p-title">AI Disinformation Policy Memo</div>
+        <div class="p-desc">Peer-reviewed memo on AI-enhanced disinformation threats to CISA-defined critical infrastructure. 30+ sources, 5 case studies, 3 evidence-based federal intervention proposals. Accepted to JSPG Winter issue.</div>
+        <div class="tech-chips"><span class="tech-chip">Policy Analysis</span><span class="tech-chip">AI Ethics</span><span class="tech-chip">Cybersecurity</span></div>
+        <div class="p-links"><a href="https://www.jspg.org" target="_blank" class="p-link">Publication <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i></a></div>
+      </div>
+      <div class="no-results" id="noProjects" style="display:none;">No projects match that filter.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= BLOG ======================================================= -->
+<div id="page-blog" class="page">
+  <div class="wrap">
+    <div class="eyebrow reveal">Writing</div>
+    <h2 class="section-title reveal">Blog.</h2>
+    <p class="section-intro reveal">Notes on software, AI, research, and things I'm thinking about.</p>
+    <div class="controls-bar reveal">
+      <div class="filter-group">
+        <button class="filter-btn active" data-bfilter="all"><i data-lucide="filter" style="width:11px;height:11px;"></i> All</button>
+        <button class="filter-btn" data-bfilter="ai"><i data-lucide="cpu" style="width:11px;height:11px;"></i> AI</button>
+        <button class="filter-btn" data-bfilter="policy"><i data-lucide="scroll" style="width:11px;height:11px;"></i> Policy</button>
+        <button class="filter-btn" data-bfilter="research"><i data-lucide="microscope" style="width:11px;height:11px;"></i> Research</button>
+        <button class="filter-btn" data-bfilter="hardware"><i data-lucide="circuit-board" style="width:11px;height:11px;"></i> Hardware</button>
+      </div>
+      <div class="search-wrap">
+        <i data-lucide="search" class="s-icon" style="width:12px;height:12px;"></i>
+        <input class="search-input" type="text" placeholder="Search posts…" id="blogSearch" oninput="filterBlog()"/>
+      </div>
+    </div>
+    <!-- Posts are rendered dynamically from the API by app.js -->
+    <div class="blog-list" id="blogList">
+      <div class="blog-loading" id="blogLoading">Loading posts…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= LIBRARY ======================================================= -->
+<div id="page-library" class="page">
+  <div class="wrap">
+    <div class="eyebrow reveal">Library</div>
+    <h2 class="section-title reveal">What I'm reading.</h2>
+    <p class="section-intro reveal">Books, papers, and articles that stuck — with honest takes.</p>
+    <div class="controls-bar reveal">
+      <div class="filter-group">
+        <button class="filter-btn active" data-lfilter="all"><i data-lucide="filter" style="width:11px;height:11px;"></i> All</button>
+        <button class="filter-btn" data-lfilter="book"><i data-lucide="book" style="width:11px;height:11px;"></i> Books</button>
+        <button class="filter-btn" data-lfilter="paper"><i data-lucide="file-text" style="width:11px;height:11px;"></i> Papers</button>
+        <button class="filter-btn" data-lfilter="article"><i data-lucide="newspaper" style="width:11px;height:11px;"></i> Articles</button>
+        <span class="filter-divider"></span>
+        <button class="filter-btn" data-lgenre="ai">AI</button>
+        <button class="filter-btn" data-lgenre="policy">Policy</button>
+        <button class="filter-btn" data-lgenre="nonfiction">Nonfiction</button>
+        <button class="filter-btn" data-lgenre="biography">Biography</button>
+      </div>
+      <div class="search-wrap">
+        <i data-lucide="search" class="s-icon" style="width:12px;height:12px;"></i>
+        <input class="search-input" type="text" placeholder="Search library…" id="libSearch" oninput="filterLibrary()"/>
+      </div>
+    </div>
+    <!-- Reviews are rendered dynamically from the API by app.js -->
+    <div class="library-list" id="libraryList">
+      <div class="blog-loading" id="libraryLoading">Loading library…</div>
+    </div>
+    <div class="no-items" id="noBooks" style="display:none;">Nothing here yet.</div>
+  </div>
+</div>
+
+<!-- ======================================================= CONTACT ======================================================= -->
+<div id="page-contact" class="page">
+  <div class="wrap">
+    <div class="eyebrow reveal">Contact</div>
+    <div class="contact-two-col">
+      <div class="reveal">
+        <div class="contact-big">Let's talk.</div>
+        <p class="contact-sub">I'm open to internships, research collaborations, and interesting conversations about AI, policy, or anything in between.</p>
+        <div class="c-links">
+          <a class="c-link" href="mailto:gracewang@gatech.edu"><i data-lucide="mail" style="width:15px;height:15px;"></i> gracewang@gatech.edu</a>
+          <a class="c-link" href="https://linkedin.com/in/gracewang" target="_blank"><i data-lucide="linkedin" style="width:15px;height:15px;"></i> linkedin.com/in/gracewang</a>
+          <a class="c-link" href="https://github.com/GraceW18" target="_blank"><i data-lucide="github" style="width:15px;height:15px;"></i> github.com/GraceW18</a>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:.1s">
+        <div class="contact-form">
+          <div class="form-row">
+            <div class="form-field"><label>Name</label><input type="text" id="cName" placeholder="Your name"/></div>
+            <div class="form-field"><label>Email</label><input type="email" id="cEmail" placeholder="you@example.com"/></div>
+          </div>
+          <div class="form-field"><label>Message</label><textarea id="cMsg" rows="5" placeholder="What's on your mind?"></textarea></div>
+          <div class="form-actions">
+            <button class="btn btn-indigo" onclick="submitContact()">Send message</button>
+          </div>
+          <div class="success-msg" id="contactSuccess" style="display:none;">Message sent — I'll get back to you soon.</div>
+          <div class="error-msg" id="contactError" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= ADMIN (hidden — type "admin" to reveal) ======================================================= -->
+<div id="page-admin" class="page">
+  <div class="wrap" style="max-width:680px;">
+    <div class="eyebrow">Admin</div>
+    <h2 class="section-title">Dashboard</h2>
+
+    <!-- Auth gate — shown when not logged in -->
+    <div id="adminAuthGate">
+      <div class="admin-form-wrap" style="max-width:380px;">
+        <div class="admin-form-header">Sign in</div>
+        <div class="admin-form-body">
+          <div class="form-field"><label>Password</label><input type="password" id="adminPass" placeholder="Admin password"/></div>
+          <div class="form-actions">
+            <button class="btn btn-indigo btn-sm" onclick="adminLogin()">Sign in</button>
+          </div>
+          <div class="error-msg" id="loginError" style="display:none;margin-top:6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin content — shown after login -->
+    <div id="adminContent" style="display:none;">
+
+      <div class="admin-form-wrap">
+        <div class="admin-form-header">Add Blog Post</div>
+        <div class="admin-form-body">
+          <div class="form-row">
+            <div class="form-field"><label>Title</label><input type="text" id="bTitle" placeholder="Post title"/></div>
+            <div class="form-field"><label>Date</label><input type="text" id="bDate" placeholder="Jul 2026"/></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Tag</label>
+              <select id="bTag">
+                <option value="ai">AI</option>
+                <option value="policy">Policy</option>
+                <option value="research">Research</option>
+                <option value="hardware">Hardware</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-field"><label>Excerpt</label><textarea id="bExcerpt" rows="3" placeholder="Short summary…"></textarea></div>
+          <div class="form-actions">
+            <button class="btn btn-indigo btn-sm" onclick="adminAddPost()">Publish post</button>
+          </div>
+          <div class="success-msg" id="bOk" style="display:none;">Post published.</div>
+          <div class="error-msg" id="bErr" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="admin-form-wrap admin-section-gap">
+        <div class="admin-form-header">Add Library Entry</div>
+        <div class="admin-form-body">
+          <div class="form-row">
+            <div class="form-field"><label>Title</label><input type="text" id="lTitle" placeholder="Book / paper title"/></div>
+            <div class="form-field"><label>Author</label><input type="text" id="lAuthor" placeholder="Author name"/></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Type</label>
+              <select id="lType"><option value="book">Book</option><option value="paper">Paper</option><option value="article">Article</option></select>
+            </div>
+            <div class="form-field"><label>Accent</label>
+              <select id="lAccent"><option value="indigo">Indigo</option><option value="teal">Teal</option><option value="amber">Amber</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Genre (comma-sep)</label><input type="text" id="lGenre" placeholder="AI, Nonfiction"/></div>
+            <div class="form-field"><label>Rating</label><input type="text" id="lRating" placeholder="★★★★★"/></div>
+          </div>
+          <div class="form-field"><label>Status</label><input type="text" id="lStatus" placeholder="Read / Rereading / Essential"/></div>
+          <div class="form-field"><label>Review</label><textarea id="lReview" rows="3" placeholder="Your take…"></textarea></div>
+          <div class="form-actions">
+            <button class="btn btn-indigo btn-sm" onclick="adminAddReview()">Add entry</button>
+          </div>
+          <div class="success-msg" id="lOk" style="display:none;">Entry added.</div>
+          <div class="error-msg" id="lErr" style="display:none;"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-outline btn-sm" style="margin-top:24px;" onclick="adminLogout()">Sign out</button>
+    </div>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:20px 28px;text-align:center;font-size:.74rem;color:var(--subtle);">
+  © 2026 Grace Wang · Atlanta, GA
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>
