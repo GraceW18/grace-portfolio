@@ -21,16 +21,23 @@ const { Pool } = require('pg');
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is not set.');
 }
+const connectionString = process.env.DATABASE_URL;
+
+const url = new URL(connectionString);
+
+console.log("Username:", url.username);
+console.log("Password:", url.password);
+console.log("Host:", url.hostname);
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  // Supabase & most managed providers require SSL in production
-  ssl: process.env.NODE_ENV === 'production'
-    ? { rejectUnauthorized: false }
-    : false,
-  max: 10,               // max pool connections
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  user: url.username,
+  password: url.password,
+  host: url.hostname,
+  port: Number(url.port),
+  database: url.pathname.slice(1),
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 pool.on('error', (err) => {
