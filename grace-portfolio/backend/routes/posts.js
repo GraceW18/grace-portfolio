@@ -29,6 +29,7 @@ router.get('/', async (_req, res, next) => {
         p.title,
         p.date,
         p.excerpt,
+        p.content,
 
         COALESCE(
 
@@ -59,7 +60,7 @@ router.get('/', async (_req, res, next) => {
 
 // POST /api/posts — admin only
 router.post('/', verifyJWT, async (req, res, next) => {
-  const { title, date, tag, excerpt } = req.body || {};
+  const { title, date, tag, excerpt, content} = req.body || {};
   if (!title || !date || !tag) {
     return res.status(400).json({ error: 'title, date, and tag are required.' });
   }
@@ -81,8 +82,8 @@ router.post('/', verifyJWT, async (req, res, next) => {
 
   try {
     const { rows } = await db.query(
-      'INSERT INTO posts (title, date, tag, excerpt) VALUES ($1,$2,$3,$4) RETURNING *',
-      [title, date, tag, excerpt || '']
+      'INSERT INTO posts (title, date, tag, excerpt, content) VALUES ($1,$2,$3,$4) RETURNING *',
+      [title, date, tag, excerpt || '', content || '']
     );
     res.status(201).json(rows[0]);
   } catch (err) {
