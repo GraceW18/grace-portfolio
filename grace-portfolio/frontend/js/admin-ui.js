@@ -56,14 +56,3 @@ class AdminUI {
     }
 }
 window.AdminUI = new AdminUI();
-
-AdminUI.showModal(
-    "Hello!",
-    `
-        <p>
-
-            The reusable modal works 🎉
-
-        </p>
-    `
-);

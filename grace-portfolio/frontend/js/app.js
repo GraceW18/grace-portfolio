@@ -137,13 +137,6 @@ function showPage(id) {
 // Init active nav
 document.querySelectorAll('[data-page="home"]').forEach(a => a.classList.add('active'));
 
-// Keyboard easter-egg: type "admin" anywhere to open admin page
-let seq = '';
-document.addEventListener('keydown', e => {
-  seq = (seq + e.key).slice(-5);
-  if (seq === 'admin') showPage('admin');
-});
-
 // ================================================================
 // API HELPERS
 // ================================================================
@@ -448,9 +441,7 @@ async function submitContact() {
   }
 }
 
-// ================================================================
-// ADMIN — login
-// ================================================================
+// Admin Log-in
 async function adminLogin() {
   const pass = document.getElementById('adminPass').value;
   const errEl = document.getElementById('loginError');
