@@ -183,27 +183,119 @@ async function loadPosts() {
   }
 }
 
-const tagCls = { ai: 'bt-ai', policy: 'bt-policy', research: 'bt-research', hardware: 'bt-hardware' };
-const tagLabel = { ai: 'AI', policy: 'Policy', research: 'Research', hardware: 'Hardware' };
+function getTagClass(tag) {
+  switch (tag.toLowerCase()) {
+    case 'ai':
+      return 'bt-ai';
+
+    case 'policy':
+      return 'bt-policy';
+
+    case 'research':
+      return 'bt-research';
+
+    case 'hardware':
+      return 'bt-hardware';
+
+    default:
+      return '';
+  }
+}
+
+function renderTags(tags) {
+
+    if (!tags.length) {
+
+        return "";
+
+    }
+
+    return `
+
+        <div class="b-tags">
+
+            ${tags.map(tag => `
+
+                <span
+                    class="b-tag ${getTagClass(tag)}"
+                >
+
+                    ${tag}
+
+                </span>
+
+            `).join("")}
+
+        </div>
+
+    `;
+
+}
+
+function createPostCard(post, index) {
+
+  return `
+    <div
+      class="blog-item"
+      data-btags="${post.tags.join(',')}"
+      data-btext="${(post.title + ' ' + post.excerpt).toLowerCase()}"
+    >
+
+      <div class="b-index">
+
+        ${String(index + 1).padStart(2, '0')}
+
+      </div>
+
+      <div class="b-body">
+
+        <div class="b-meta">
+
+          <span class="b-date">
+
+            ${post.date}
+
+          </span>
+
+          <span class="b-tag-dot"></span>
+
+          ${renderTags(post.tags)}
+
+        </div>
+
+        <div class="b-title">
+
+          ${post.title}
+
+        </div>
+
+        <div class="b-excerpt">
+
+          ${post.excerpt}
+
+        </div>
+
+      </div>
+
+      <div class="b-arrow">
+
+        <i
+          data-lucide="arrow-up-right"
+          style="width:16px;height:16px;"
+        ></i>
+
+      </div>
+
+    </div>
+  `;
+
+}
 
 function renderPosts(posts) {
   const list = document.getElementById('blogList');
   if (!list) return;
   if (!posts.length) { list.innerHTML = '<div class="blog-loading">No posts yet.</div>'; return; }
-  list.innerHTML = posts.map((p, i) => `
-    <div class="blog-item" data-btag="${p.tag}" data-btext="${(p.title + ' ' + p.excerpt).toLowerCase()}">
-      <div class="b-index">${String(i + 1).padStart(2, '0')}</div>
-      <div class="b-body">
-        <div class="b-meta">
-          <span class="b-date">${p.date}</span>
-          <span class="b-tag-dot"></span>
-          <span class="b-tag ${tagCls[p.tag] || ''}">${tagLabel[p.tag] || p.tag}</span>
-        </div>
-        <div class="b-title">${p.title}</div>
-        <div class="b-excerpt">${p.excerpt}</div>
-      </div>
-      <div class="b-arrow"><i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i></div>
-    </div>`).join('');
+  list.innerHTML = posts.map(createPostCard).join('');
   lucide.createIcons();
   filterBlog();
 }
@@ -221,7 +313,8 @@ function filterBlog() {
   const q = (document.getElementById('blogSearch')?.value || '').toLowerCase();
   let n = 1;
   document.querySelectorAll('#blogList .blog-item').forEach(item => {
-    const tm = tag === 'all' || item.dataset.btag === tag;
+    const tags = item.dataset.btags.split(',');
+    const tm = tag === 'all' || tags.includes(tag);
     const qm = !q || item.dataset.btext?.includes(q) || item.querySelector('.b-title')?.textContent.toLowerCase().includes(q);
     item.classList.toggle('hidden', !(tm && qm));
     if (tm && qm) item.querySelector('.b-index').textContent = String(n++).padStart(2, '0');

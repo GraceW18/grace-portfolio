@@ -235,6 +235,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.94);backdrop
 .b-date{font-size:.73rem;color:var(--subtle);font-weight:500;}
 .b-tag-dot{width:3px;height:3px;background:var(--border2);border-radius:50%;}
 .b-tag{font-size:.66rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:1px 6px;border-radius:2px;}
+.b-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
 .bt-ai{background:var(--indigo-bg);color:var(--indigo);}
 .bt-policy{background:var(--amber-bg);color:var(--amber);}
 .bt-research{background:var(--teal-bg);color:var(--teal);}
@@ -359,4 +360,33 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.94);backdrop
 }
 @media(prefers-reduced-motion:reduce){
   .crane-svg-wrap,.hobby-track,.reveal{animation:none!important;opacity:1!important;transform:none!important;}
+}
+/* Admin Modal */
+.admin-modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+.admin-modal{
+  width:min(650px,90vw);
+  background:var(--bg);
+  border-radius:18px;
+  padding:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.admin-modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+.admin-close{
+  border:none;
+  background:none;
+  font-size:22px;
+  cursor:pointer;
 }

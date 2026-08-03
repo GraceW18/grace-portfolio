@@ -21,6 +21,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors    = require('cors');
+const tags    = require('./routes/tags');
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(cors({
 // ── Routes ───────────────────────────────────────────────────────
 app.use('/api/auth',    require('./routes/auth'));
 app.use('/api/posts',   require('./routes/posts'));
+app.use('/api/tags',    tags);
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/contact', require('./routes/contact'));
 

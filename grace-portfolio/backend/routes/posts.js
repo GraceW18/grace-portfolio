@@ -22,9 +22,35 @@ const db        = require('../db/client');
 // GET /api/posts — public
 router.get('/', async (_req, res, next) => {
   try {
-    const { rows } = await db.query(
-      'SELECT id, title, date, tag, excerpt FROM posts ORDER BY created_at DESC'
-    );
+    const { rows } = await db.query(`
+    SELECT
+
+        p.id,
+        p.title,
+        p.date,
+        p.excerpt,
+
+        COALESCE(
+
+            array_agg(t.name ORDER BY t.name)
+            FILTER (WHERE t.id IS NOT NULL),
+
+            '{}'
+
+        ) AS tags
+
+    FROM posts p
+
+    LEFT JOIN post_tags pt
+    ON p.id = pt.post_id
+
+    LEFT JOIN tags t
+    ON pt.tag_id = t.id
+
+    GROUP BY p.id
+
+    ORDER BY p.created_at DESC;
+    `);
     res.json(rows);
   } catch (err) {
     next(err);
@@ -37,10 +63,22 @@ router.post('/', verifyJWT, async (req, res, next) => {
   if (!title || !date || !tag) {
     return res.status(400).json({ error: 'title, date, and tag are required.' });
   }
-  const VALID_TAGS = ['ai', 'policy', 'research', 'hardware'];
-  if (!VALID_TAGS.includes(tag)) {
-    return res.status(400).json({ error: `tag must be one of: ${VALID_TAGS.join(', ')}` });
+  // Check if the tag exists in the tags table
+  const { rows } = await db.query(
+  `
+  SELECT id
+  FROM tags
+  WHERE name = $1;
+  `,
+  [tag]
+  );
+
+  if (rows.length === 0) {
+    return res.status(400).json({
+      error: "Invalid tag."
+    });
   }
+
   try {
     const { rows } = await db.query(
       'INSERT INTO posts (title, date, tag, excerpt) VALUES ($1,$2,$3,$4) RETURNING *',
