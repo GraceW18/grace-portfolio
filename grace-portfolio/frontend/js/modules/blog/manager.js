@@ -44,6 +44,22 @@ async function loadPosts() {
             </tbody>
         </table>
     `;
+    document
+        .querySelectorAll(".editPost")
+        .forEach(button => {
+
+            button.onclick = () => {
+
+                const id = Number(button.dataset.id);
+
+                const post =
+                    posts.find(p => p.id === id);
+
+                Blog.renderEditor(post);
+
+            };
+
+        });
 }
 
 function createPostRow(post) {
@@ -53,8 +69,17 @@ function createPostRow(post) {
             <td>${post.tag}</td>
             <td>${post.date}</td>
             <td>
-                <button>Edit</button>
-                <button>Delete</button>
+                <button
+                    class="editPost"
+                    data-id="${post.id}">
+                    Edit
+                </button>
+
+                <button
+                    class="deletePost"
+                    data-id="${post.id}">
+                    Delete
+                </button>
             </td>
         </tr>
     `;

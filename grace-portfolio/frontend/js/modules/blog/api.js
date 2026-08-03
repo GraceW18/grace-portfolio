@@ -9,7 +9,22 @@ async function createPost(post) {
     });
 }
 
+async function updatePost(id, post) {
+    return apiFetch(`/api/posts/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(post)
+    });
+}
+
+async function deletePost(id) {
+    return apiFetch(`/api/posts/${id}`, {
+        method: "DELETE"
+    });
+}
+
 window.BlogAPI = {
     fetchPosts,
-    createPost
+    createPost,
+    updatePost,
+    deletePost
 };

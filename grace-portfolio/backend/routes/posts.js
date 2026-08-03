@@ -91,4 +91,60 @@ router.post('/', verifyJWT, async (req, res, next) => {
   }
 });
 
+// PUT /api/posts/:id — admin only
+router.put('/:id', verifyJWT, async (req, res, next) => {
+    const { id } = req.params;
+    const { title, date, tag, excerpt, content } = req.body;
+    try {
+        const { rows } = await db.query(
+            `
+            UPDATE posts
+            SET
+                title = $1,
+                date = $2,
+                tag = $3,
+                excerpt = $4,
+                content = $5
+            WHERE id = $6
+            RETURNING *;
+            `,
+            [title, date, tag, excerpt, content, id]
+        );
+        if (!rows.length) {
+            return res.status(404).json({
+                error: "Post not found."
+            });
+        }
+        res.json(rows[0]);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
+// DELETE /api/posts/:id — admin only
+router.delete('/:id', verifyJWT, async (req, res, next) => {
+    try {
+        const { rows } = await db.query(
+            `
+            DELETE FROM posts
+            WHERE id = $1
+            RETURNING *;
+            `,
+            [req.params.id]
+        );
+        if (!rows.length) {
+            return res.status(404).json({
+                error: "Post not found."
+            });
+        }
+        res.json({
+            success: true
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;

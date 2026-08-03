@@ -50,9 +50,12 @@ async function renderEditor(post = null) {
                     + Create Tag
                 </button>
                 <hr>
-                <button
-                    id="publishPost">
-                    Publish
+                <button id="publishPost">
+                    ${
+                        post
+                            ? "Save Changes"
+                            : "Publish"
+                    }
                 </button>
             </section>
             <section
@@ -61,6 +64,10 @@ async function renderEditor(post = null) {
             </section>
         </div>
     `;
+    content.dataset.editingId =
+    post
+        ? post.id
+        : "";
     await BlogTags.loadTagPicker();
     BlogPreview.updatePreview();
     wireEditor();
@@ -105,17 +112,35 @@ async function publishPost() {
         return;
     }
     try {
-        await BlogAPI.createPost("/api/posts", {
-            method: "POST",
-            body: JSON.stringify({
+        const editingId =
+            document
+                .getElementById("studio-content")
+                .dataset
+                .editingId;
+        if (editingId) {
+            await BlogAPI.updatePost(
+                editingId,
+                {
+                    title,
+                    date,
+                    excerpt,
+                    content,
+                    tag: tags[0]
+                }
+            );
+            alert("Post updated!");
+        }
+        else {
+            await BlogAPI.createPost({
                 title,
                 date,
                 excerpt,
                 content,
-                tag: tags[0] // temporary until multi-tag backend
-            })
-        });
-        alert("Published! 🎉");
+                tag: tags[0]
+            });
+            alert("Post published!");
+        }
+        alert("Published!");
         Blog.renderManager();
     }
     catch(err){
