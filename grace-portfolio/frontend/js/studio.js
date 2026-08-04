@@ -83,7 +83,7 @@ function renderDashboard() {
                 <button data-page="dashboard">
                     Dashboard
                 </button>
-                <button data-page="blog">>
+                <button data-page="blog">
                     Blog
                 </button>
                 <button data-page="library">

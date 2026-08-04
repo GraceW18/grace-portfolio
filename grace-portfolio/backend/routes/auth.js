@@ -2,12 +2,6 @@
  * /api/auth
  *
  * POST /api/auth/login
- *   Body: { password: string }
- *   Returns: { token: string }   (JWT, 7-day expiry)
- *
- * The admin password lives in ADMIN_PASSWORD env var.
- * For better security you could bcrypt-hash it — but for a single-admin
- * personal portfolio, a strong random string in the env is sufficient.
  */
 
 const router    = require('express').Router();

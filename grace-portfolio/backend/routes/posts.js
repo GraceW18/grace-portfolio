@@ -31,7 +31,7 @@ router.get('/', async (_req, res, next) => {
         p.content,
         COALESCE(
             jsonb_agg(
-                jsonb_build_object('name', t.name, 'color', t.color)
+                jsonb_build_object('name', t.name, 'color', t.color, 'icon', t.icon)
                 ORDER BY t.name
             ) FILTER (WHERE t.id IS NOT NULL),
             '[]'::jsonb
@@ -61,7 +61,7 @@ router.get('/:id', async (req, res, next) => {
                 p.content,
                 COALESCE(
                     jsonb_agg(
-                        jsonb_build_object('name', t.name, 'color', t.color)
+                        jsonb_build_object('name', t.name, 'color', t.color, 'icon', t.icon)
                         ORDER BY t.name
                     ) FILTER (WHERE t.id IS NOT NULL),
                     '[]'::jsonb

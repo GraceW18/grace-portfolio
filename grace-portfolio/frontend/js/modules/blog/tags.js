@@ -6,7 +6,8 @@ async function loadTagPicker() {
             <input
                 type="checkbox"
                 value="${tag.name}"
-                data-color="${tag.color}">
+                data-color="${tag.color}"
+                data-icon="${tag.icon || 'tag'}"
             <span
                 class="tag-swatch"
                 style="background:${tag.color}">
@@ -38,7 +39,8 @@ function getSelectedTags() {
         )
     ].map(box => ({
         name: box.value,
-        color: box.dataset.color || "#2563eb"
+        color: box.dataset.color || "#2563eb",
+        icon: box.dataset.icon || "tag"
     }));
 }
 

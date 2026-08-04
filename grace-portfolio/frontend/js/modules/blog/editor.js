@@ -214,21 +214,22 @@ async function createNewTag() {
         return;
     }
     try {
-        const tags =
-            await BlogAPI.createTag(
-                name,
-                color
-            );
+        await BlogAPI.createTag({ name, color });
         AdminUI.closeModal();
         await BlogTags.loadTagPicker();
-        if (post?.tags) {
-            post.tags.forEach(tag => {
-                const name = tag.name ?? tag;
-                const checkbox = document.querySelector(
-                    `#tagPicker input[value="${name}"]`
-                );
-                if (checkbox) checkbox.checked = true;
-            });
+        // Re-apply the currently selected tags (if any) so the picker
+        // doesn't lose the user's in-progress selection after the refresh.
+        const content = document.getElementById("studio-content");
+        const editingId = content?.dataset?.editingId;
+         if (editingId) {
+            const post = (await BlogAPI.fetchPosts()).find(p => String(p.id) === String(editingId));
+            (post?.tags || []).forEach(tag => {
+                const tagName = tag.name ?? tag;
+                 const checkbox = document.querySelector(
+                    `#tagPicker input[value="${tagName}"]`
+                 );
+                 if (checkbox) checkbox.checked = true;
+             });
         }
         BlogPreview.updatePreview();
     }

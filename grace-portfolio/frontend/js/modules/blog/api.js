@@ -22,12 +22,13 @@ async function deletePost(id) {
     });
 }
 
-async function createTag(name, color) {
+async function createTag(name, color, icon) {
     return apiFetch("/api/tags", {
         method: "POST",
         body: JSON.stringify({
             name,
-            color
+            color,
+            icon
         })
     });
 }

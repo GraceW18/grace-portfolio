@@ -25,7 +25,7 @@ Create a new tag.
 (Admin only)
 */
 router.post("/", verifyJWT, async (req, res, next) => {
-    let { name, color } = req.body || {};
+    let { name, color, icon } = req.body || {};
     name = (name || "").trim();
     if (!name) {
         return res.status(400).json({
@@ -35,14 +35,9 @@ router.post("/", verifyJWT, async (req, res, next) => {
     try {
         // Don't allow duplicate names
         const existing = await db.query(
-            `
-            SELECT id
-            FROM tags
-            WHERE LOWER(name)=LOWER($1)
-            `,
+            `SELECT id FROM tags WHERE LOWER(name)=LOWER($1)`,
             [name]
         );
-
         if (existing.rows.length) {
             return res.status(409).json({
                 error: "That tag already exists."
@@ -51,14 +46,11 @@ router.post("/", verifyJWT, async (req, res, next) => {
 
         const { rows } = await db.query(
             `
-            INSERT INTO tags(name,color)
-            VALUES($1,$2)
+            INSERT INTO tags(name, color, icon)
+            VALUES($1, $2, $3)
             RETURNING *;
             `,
-            [
-                name,
-                color || "#2563eb"
-            ]
+            [name, color || "#2563eb", icon || "tag"]
         );
         res.status(201).json(rows[0]);
     }
@@ -74,7 +66,7 @@ Update an existing tag's name and/or color.
 */
 router.put("/:id", verifyJWT, async (req, res, next) => {
     const { id } = req.params;
-    let { name, color } = req.body || {};
+    let { name, color, icon } = req.body || {};
     name = (name || "").trim();
     if (!name) {
         return res.status(400).json({
@@ -101,11 +93,12 @@ router.put("/:id", verifyJWT, async (req, res, next) => {
             `
             UPDATE tags
             SET name = $1,
-                color = COALESCE($2, color)
-            WHERE id = $3
+                color = COALESCE($2, color),
+                icon = COALESCE($3, icon)
+            WHERE id = $4
             RETURNING *;
             `,
-            [name, color || null, id]
+            [ name, color || null, icon || null, id ]
         );
         if (!rows.length) {
             return res.status(404).json({

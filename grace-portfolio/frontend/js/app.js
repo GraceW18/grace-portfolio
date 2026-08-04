@@ -204,13 +204,12 @@ function renderTagFilters(tags) {
         class="filter-btn"
         data-bfilter="${escapeAttr(t.name)}"
         style="--tag-color:${escapeAttr(t.color)};">
-        <span class="filter-dot" style="background:${escapeAttr(t.color)};"></span>
+        <i data-lucide="${escapeAttr(t.icon || 'tag')}" style="width:11px;height:11px;"></i>
         ${escapeHTML(t.name)}
       </button>
     `)
   ].join('');
   group.innerHTML = html;
-  // Re-wire click handlers since we replaced the inner HTML.
   group.querySelectorAll('[data-bfilter]').forEach(btn => {
     btn.addEventListener('click', function () {
       group.querySelectorAll('[data-bfilter]').forEach(b => b.classList.remove('active'));
@@ -232,13 +231,15 @@ function renderTags(tags) {
     return `
         <div class="b-tags">
             ${tags.map(tag => {
-                const name = tag.name ?? tag;
+                const name  = tag.name  ?? tag;
                 const color = tag.color || '#2563eb';
+                const icon  = tag.icon  || 'tag';
                 return `
                 <span
                     class="b-tag"
                     style="background:${hexToBg(color)};color:${color};border:1px solid ${color}33;"
                 >
+                    <i data-lucide="${escapeAttr(icon)}" style="width:11px;height:11px;vertical-align:-1px;margin-right:3px;"></i>
                     ${escapeHTML(name)}
                 </span>`;
             }).join("")}

@@ -14,6 +14,7 @@ function updatePreview() {
                     <span
                         class="article-tag"
                         style="background:${hexToBg(tag.color)};color:${tag.color};border:1px solid ${tag.color}33;">
+                        <i data-lucide="${escapeAttr(tag.icon || 'tag')}" style="width:11px;height:11px;vertical-align:-1px;margin-right:3px;"></i>
                         ${tag.name}
                     </span>
                 `).join("")}
@@ -22,6 +23,7 @@ function updatePreview() {
             <div class="article-content">${marked.parse(content || "")}</div>
         </div>
     `;
+    if (window.lucide) lucide.createIcons();
 }
 
 function hexToBg(hex) {
@@ -31,6 +33,17 @@ function hexToBg(hex) {
     const g = parseInt(h.slice(2, 4), 16);
     const b = parseInt(h.slice(4, 6), 16);
     return `rgba(${r},${g},${b},0.12)`;
+}
+
+function escapeHTML(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
+
+function escapeAttr(s) {
+    return escapeHTML(s);
 }
 
 function createPreviewHTML(title, date, excerpt, content, tags = []) {

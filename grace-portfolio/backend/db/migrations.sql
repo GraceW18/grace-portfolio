@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS tags (
   name       TEXT    NOT NULL UNIQUE,
   color      TEXT    DEFAULT '#2563eb',
   created_at TIMESTAMPTZ DEFAULT NOW()
+  icon       TEXT    DEFAULT 'tag'
 );
 
 -- =============================================================
