@@ -58,6 +58,44 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
+// GET /api/posts/:id — public
+router.get('/:id', async (req, res, next) => {
+    try {
+        const { rows } = await db.query(
+            `
+            SELECT
+                p.id,
+                p.title,
+                p.date,
+                p.excerpt,
+                p.content,
+                COALESCE(
+                    array_agg(t.name ORDER BY t.name)
+                    FILTER (WHERE t.id IS NOT NULL),
+                    '{}'
+                ) AS tags
+            FROM posts p
+            LEFT JOIN post_tags pt
+                ON p.id = pt.post_id
+            LEFT JOIN tags t
+                ON pt.tag_id = t.id
+            WHERE p.id = $1
+            GROUP BY p.id;
+            `,
+            [req.params.id]
+        );
+        if (!rows.length) {
+            return res.status(404).json({
+                error: "Post not found."
+            });
+        }
+        res.json(rows[0]);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
 // POST /api/posts — admin only
 router.post('/', verifyJWT, async (req, res, next) => {
   const { title, date, tag, excerpt, content} = req.body || {};

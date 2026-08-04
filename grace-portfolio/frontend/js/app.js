@@ -199,92 +199,60 @@ function getTagClass(tag) {
 }
 
 function renderTags(tags) {
-
     if (!tags.length) {
-
         return "";
-
     }
-
     return `
-
         <div class="b-tags">
-
             ${tags.map(tag => `
-
                 <span
                     class="b-tag ${getTagClass(tag)}"
                 >
-
                     ${tag}
-
                 </span>
-
             `).join("")}
-
         </div>
-
     `;
-
 }
 
 function createPostCard(post, index) {
-
   return `
     <div
       class="blog-item"
       data-btags="${post.tags.join(',')}"
       data-btext="${(post.title + ' ' + post.excerpt).toLowerCase()}"
     >
-
       <div class="b-index">
-
         ${String(index + 1).padStart(2, '0')}
-
       </div>
-
       <div class="b-body">
-
         <div class="b-meta">
-
           <span class="b-date">
-
             ${post.date}
-
           </span>
-
           <span class="b-tag-dot"></span>
-
           ${renderTags(post.tags)}
-
         </div>
-
-        <div class="b-title">
-
+        <a class="b-title" href="article.html?id=${post.id}">
           ${post.title}
-
-        </div>
-
+        </a>
         <div class="b-excerpt">
-
           ${post.excerpt}
-
         </div>
-
       </div>
-
       <div class="b-arrow">
-
-        <i
-          data-lucide="arrow-up-right"
-          style="width:16px;height:16px;"
-        ></i>
-
+        <a
+            href="article.html?id=${post.id}"
+            class="article-link"
+            aria-label="Read article">
+            <i
+                data-lucide="arrow-up-right"
+                style="width:16px;height:16px;">
+            </i>
+        </a>
       </div>
-
     </div>
   `;
-
 }
 
 function renderPosts(posts) {

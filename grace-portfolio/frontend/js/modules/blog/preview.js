@@ -1,4 +1,6 @@
 function updatePreview() {
+    const preview =
+        document.getElementById("livePreview");
     const title =
         document.getElementById("postTitle").value;
     const date =
@@ -7,16 +9,29 @@ function updatePreview() {
         document.getElementById("postExcerpt").value;
     const content =
         document.getElementById("postContent").value;
-    document
-        .getElementById("livePreview")
-        .innerHTML =
-            createPreviewHTML(
-                title,
-                date,
-                excerpt,
-                content,
-                BlogTags.getSelectedTags()
-            );
+    const tags =
+        BlogTags.getSelectedTags();
+    preview.innerHTML = `
+        <div class="article-preview">
+            <h1 class="article-title">
+                ${title || "Untitled Post"}
+            </h1>
+            <div class="article-meta">
+                <span>${date}</span>
+                ${tags.map(tag=>`
+                    <span class="article-tag">
+                        ${tag}
+                    </span>
+                `).join("")}
+            </div>
+            <p class="article-excerpt">
+                ${excerpt}
+            </p>
+            <div class="article-content">
+                ${marked.parse(content || "")}
+            </div>
+        </div>
+    `;
 }
 
 function createPreviewHTML(title, date, excerpt, content, tags = []) {
