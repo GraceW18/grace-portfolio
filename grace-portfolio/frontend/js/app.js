@@ -17,10 +17,13 @@
 // ================================================================
 // CONFIG — change BASE_URL to your deployed backend URL in prod
 // ================================================================
-const BASE_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:3000'
-  : '';   // same-origin on Vercel via rewrites in vercel.json
+const isLocal =
+    location.hostname === "localhost" ||
+    location.hostname.startsWith("127.");
 
+const BASE_URL = isLocal
+    ? "http://localhost:3000"
+    : "";
 // ================================================================
 // LUCIDE ICONS
 // ================================================================

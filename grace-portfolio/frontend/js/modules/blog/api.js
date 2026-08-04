@@ -22,9 +22,20 @@ async function deletePost(id) {
     });
 }
 
+async function createTag(name, color) {
+    return apiFetch("/api/tags", {
+        method: "POST",
+        body: JSON.stringify({
+            name,
+            color
+        })
+    });
+}
+
 window.BlogAPI = {
     fetchPosts,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    createTag
 };

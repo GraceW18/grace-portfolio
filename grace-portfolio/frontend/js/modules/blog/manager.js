@@ -60,13 +60,40 @@ async function loadPosts() {
             };
 
         });
+    document
+    .querySelectorAll(".deletePost")
+    .forEach(button => {
+        button.onclick = async () => {
+            const id = Number(button.dataset.id);
+            const post =
+                posts.find(p => p.id === id);
+            const confirmed =
+                await AdminUI.confirm(
+                    "Delete Post",
+                    `
+                    <strong>${post.title}</strong>
+                    <br><br>
+                    This action cannot be undone.
+                    `
+                );
+            if (!confirmed) return;
+            try {
+                await BlogAPI.deletePost(id);
+                alert("Post deleted.");
+                loadPosts();
+            }
+            catch (err) {
+                alert(err.message);
+            }
+        };
+    });
 }
 
 function createPostRow(post) {
     return `
         <tr>
             <td>${post.title}</td>
-            <td>${post.tag}</td>
+            <td>${(post.tags || []).join(", ")}</td>
             <td>${post.date}</td>
             <td>
                 <button

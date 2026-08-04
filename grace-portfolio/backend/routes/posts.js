@@ -85,6 +85,13 @@ router.post('/', verifyJWT, async (req, res, next) => {
       'INSERT INTO posts (title, date, tag, excerpt, content) VALUES ($1,$2,$3,$4) RETURNING *',
       [title, date, tag, excerpt || '', content || '']
     );
+    await db.query(
+      `
+      INSERT INTO post_tags (post_id, tag_id)
+      VALUES ($1, $2);
+      `,
+      [rows[0].id, tagRows[0].id]
+  );
     res.status(201).json(rows[0]);
   } catch (err) {
     next(err);
@@ -95,6 +102,7 @@ router.post('/', verifyJWT, async (req, res, next) => {
 router.put('/:id', verifyJWT, async (req, res, next) => {
     const { id } = req.params;
     const { title, date, tag, excerpt, content } = req.body;
+    console.log("PUT tag received:", tag);
     try {
         const { rows } = await db.query(
             `
@@ -110,6 +118,33 @@ router.put('/:id', verifyJWT, async (req, res, next) => {
             `,
             [title, date, tag, excerpt, content, id]
         );
+        // Remove existing tag relationships
+        await db.query(
+            `
+            DELETE FROM post_tags
+            WHERE post_id = $1;
+            `,
+            [id]
+        );
+        // Find the ID of the selected tag
+        const { rows: tagRows } = await db.query(
+            `
+            SELECT id
+            FROM tags
+            WHERE name = $1;
+            `,
+            [tag]
+        );
+        // Create the new relationship
+        if (tagRows.length) {
+          await db.query(
+              `
+              INSERT INTO post_tags (post_id, tag_id)
+              VALUES ($1, $2);
+              `,
+              [id, tagRows[0].id]
+          );
+        }
         if (!rows.length) {
             return res.status(404).json({
                 error: "Post not found."

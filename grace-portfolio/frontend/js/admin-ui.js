@@ -10,7 +10,7 @@ Reusable UI building blocks:
 =========================================================
 */
 
-class AdminUI {
+class AdminUIManager {
     constructor() {
         this.modal = null;
     }
@@ -48,6 +48,38 @@ class AdminUI {
         this.modal = overlay;
         return overlay;
     }
+    confirm(title, message) {
+        return new Promise(resolve => {
+            const modal = this.showModal(
+                title,
+                `
+                    <p>${message}</p>
+                    <div class="admin-modal-actions">
+                        <button id="cancelAction">
+                            Cancel
+                        </button>
+                        <button
+                            id="confirmAction"
+                            class="danger">
+                            Delete
+                        </button>
+                    </div>
+                `
+            );
+            modal
+                .querySelector("#cancelAction")
+                .onclick = () => {
+                    this.closeModal();
+                    resolve(false);
+                };
+            modal
+                .querySelector("#confirmAction")
+                .onclick = () => {
+                    this.closeModal();
+                    resolve(true);
+                };
+        });
+    }
     closeModal() {
         if (this.modal) {
             this.modal.remove();
@@ -55,4 +87,4 @@ class AdminUI {
         }
     }
 }
-window.AdminUI = new AdminUI();
+window.AdminUI = new AdminUIManager();
