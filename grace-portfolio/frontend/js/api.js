@@ -4,7 +4,9 @@ API Helper
 =========================================================
 */
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000"
+  : "";  // empty string = same origin, so fetch("/api/...") works on Vercel
 
 async function apiFetch(endpoint, options = {}) {
 
