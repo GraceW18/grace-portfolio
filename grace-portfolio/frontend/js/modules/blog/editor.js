@@ -69,6 +69,17 @@ async function renderEditor(post = null) {
         ? post.id
         : "";
     await BlogTags.loadTagPicker();
+    // Pre-check the tag(s) on the existing post.
+    // The API returns [{name, color}], so coerce defensively.
+    if (post?.tags?.length) {
+        post.tags.forEach(tag => {
+            const name = tag.name ?? tag;
+            const box = document.querySelector(
+                `#tagPicker input[value="${name}"]`
+            );
+            if (box) box.checked = true;
+        });
+    }
     BlogPreview.updatePreview();
     wireEditor();
 }
@@ -106,7 +117,7 @@ async function publishPost() {
     const content =
         document.getElementById("postContent").value.trim();
     const tags =
-        BlogTags.getSelectedTags();
+        BlogTags.getSelectedTagNames();
     if (!title) {
         alert("Title required.");
         return;
@@ -211,14 +222,12 @@ async function createNewTag() {
         AdminUI.closeModal();
         await BlogTags.loadTagPicker();
         if (post?.tags) {
-            post.tags.forEach(tagName => {
-                const checkbox =
-                    document.querySelector(
-                        `#tagPicker input[value="${tagName}"]`
-                    );
-                if (checkbox) {
-                    checkbox.checked = true;
-                }
+            post.tags.forEach(tag => {
+                const name = tag.name ?? tag;
+                const checkbox = document.querySelector(
+                    `#tagPicker input[value="${name}"]`
+                );
+                if (checkbox) checkbox.checked = true;
             });
         }
         BlogPreview.updatePreview();

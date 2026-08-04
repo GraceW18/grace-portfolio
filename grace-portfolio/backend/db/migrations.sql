@@ -38,6 +38,31 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Tags
+CREATE TABLE IF NOT EXISTS tags (
+  id         SERIAL PRIMARY KEY,
+  name       TEXT    NOT NULL UNIQUE,
+  color      TEXT    DEFAULT '#2563eb',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================================
+-- Seed data — initial tags
+-- =============================================================
+INSERT INTO tags (name, color) VALUES
+  ('ai',       '#6366f1'),
+  ('policy',   '#f59e0b'),
+  ('research', '#0d9488'),
+  ('hardware', '#ef4444')
+ON CONFLICT (name) DO NOTHING;
+
+-- Many-to-many: posts <-> tags
+CREATE TABLE IF NOT EXISTS post_tags (
+  post_id    INTEGER NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  tag_id     INTEGER NOT NULL REFERENCES tags(id)  ON DELETE CASCADE,
+  PRIMARY KEY (post_id, tag_id)
+);
+
 -- =============================================================
 -- Seed data — initial blog posts (matches original HTML content)
 -- =============================================================
@@ -62,6 +87,13 @@ INSERT INTO posts (title, date, tag, excerpt) VALUES
     'Sep 2025', 'hardware',
     '11–12 million people in the U.S. have TMJ disorder. Existing devices cost thousands. We wanted to close that gap in a weekend. Spoiler: 5th place, one Flask backend held together by willpower, and a lot of things I''d do differently next time.'
   )
+ON CONFLICT DO NOTHING;
+
+-- Link seeded posts to their tags via the post_tags join table
+INSERT INTO post_tags (post_id, tag_id)
+SELECT p.id, t.id
+FROM posts p
+JOIN tags t ON t.name = p.tag
 ON CONFLICT DO NOTHING;
 
 -- =============================================================

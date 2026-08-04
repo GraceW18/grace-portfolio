@@ -164,11 +164,22 @@ async function apiFetch(path, opts = {}) {
 // BLOG — load posts from API, render, then wire filters
 // ================================================================
 let postsCache = null;
+let tagsCache = null;
 
 async function loadPosts() {
-  if (postsCache) return renderPosts(postsCache);
   const list = document.getElementById('blogList');
   if (!list) return;
+  // Always re-fetch tags so the filter list reflects any
+  // adds/edits/deletes the admin made since the last visit.
+  // (Posts are cached — they don't change as often.)
+  try {
+    const tags = await apiFetch('/api/tags').catch(() => []);
+    tagsCache = tags;
+    renderTagFilters(tags);
+  } catch (e) {
+    // non-fatal: keep the existing filter buttons if any
+  }
+  if (postsCache) return renderPosts(postsCache);
   list.innerHTML = '<div class="blog-loading">Loading posts…</div>';
   try {
     const data = await apiFetch('/api/posts');
@@ -179,76 +190,103 @@ async function loadPosts() {
   }
 }
 
-function getTagClass(tag) {
-  switch (tag.toLowerCase()) {
-    case 'ai':
-      return 'bt-ai';
+// Build the blog filter chips from the live tag list, so deletes
+// and renames in the Tag Manager show up on the next page visit.
+function renderTagFilters(tags) {
+  const group = document.querySelector('[data-blog-filters]');
+  if (!group) return;
+  const html = [
+    `<button class="filter-btn active" data-bfilter="all">
+       <i data-lucide="filter" style="width:11px;height:11px;"></i> All
+     </button>`,
+    ...tags.map(t => `
+      <button
+        class="filter-btn"
+        data-bfilter="${escapeAttr(t.name)}"
+        style="--tag-color:${escapeAttr(t.color)};">
+        <span class="filter-dot" style="background:${escapeAttr(t.color)};"></span>
+        ${escapeHTML(t.name)}
+      </button>
+    `)
+  ].join('');
+  group.innerHTML = html;
+  // Re-wire click handlers since we replaced the inner HTML.
+  group.querySelectorAll('[data-bfilter]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      group.querySelectorAll('[data-bfilter]').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      filterBlog();
+    });
+  });
+  if (window.lucide) lucide.createIcons();
+}
 
-    case 'policy':
-      return 'bt-policy';
-
-    case 'research':
-      return 'bt-research';
-
-    case 'hardware':
-      return 'bt-hardware';
-
-    default:
-      return '';
-  }
+function getTagClass(_tag) {
+  // Kept for backward compatibility with any external callers;
+  // color is now applied inline from the API response.
+  return '';
 }
 
 function renderTags(tags) {
-    if (!tags.length) {
-        return "";
-    }
+    if (!tags.length) return "";
     return `
         <div class="b-tags">
-            ${tags.map(tag => `
+            ${tags.map(tag => {
+                const name = tag.name ?? tag;
+                const color = tag.color || '#2563eb';
+                return `
                 <span
-                    class="b-tag ${getTagClass(tag)}"
+                    class="b-tag"
+                    style="background:${hexToBg(color)};color:${color};border:1px solid ${color}33;"
                 >
-                    ${tag}
-                </span>
-            `).join("")}
+                    ${escapeHTML(name)}
+                </span>`;
+            }).join("")}
         </div>
     `;
 }
 
+function escapeHTML(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function escapeAttr(s) {
+  return escapeHTML(s);
+}
+
+function hexToBg(hex) {
+  if (!hex || !/^#?([0-9a-f]{6})$/i.test(hex)) return "#eee";
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},0.12)`;
+}
+
 function createPostCard(post, index) {
+  const tagNames = (post.tags || []).map(t => t.name ?? t);
   return `
     <div
       class="blog-item"
-      data-btags="${post.tags.join(',')}"
+      data-btags="${tagNames.join(',')}"
       data-btext="${(post.title + ' ' + post.excerpt).toLowerCase()}"
     >
-      <div class="b-index">
-        ${String(index + 1).padStart(2, '0')}
-      </div>
+      <div class="b-index">${String(index + 1).padStart(2, '0')}</div>
       <div class="b-body">
         <div class="b-meta">
-          <span class="b-date">
-            ${post.date}
-          </span>
+          <span class="b-date">${post.date}</span>
           <span class="b-tag-dot"></span>
           ${renderTags(post.tags)}
         </div>
-        <a class="b-title" href="article.html?id=${post.id}">
-          ${post.title}
-        </a>
-        <div class="b-excerpt">
-          ${post.excerpt}
-        </div>
+        <a class="b-title" href="article.html?id=${post.id}">${post.title}</a>
+        <div class="b-excerpt">${post.excerpt}</div>
       </div>
       <div class="b-arrow">
-        <a
-            href="article.html?id=${post.id}"
-            class="article-link"
-            aria-label="Read article">
-            <i
-                data-lucide="arrow-up-right"
-                style="width:16px;height:16px;">
-            </i>
+        <a href="article.html?id=${post.id}" class="article-link" aria-label="Read article">
+          <i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i>
         </a>
       </div>
     </div>

@@ -1,17 +1,19 @@
 async function loadTagPicker() {
-    const tags =
-        await apiFetch("/api/tags");
-    const picker =
-        document.getElementById("tagPicker");
-    picker.innerHTML =
-        tags.map(tag => `
-            <label class="tag-option">
-                <input
-                    type="checkbox"
-                    value="${tag.name}">
-                ${tag.name}
-            </label>
-        `).join("");
+    const tags = await apiFetch("/api/tags");
+    const picker = document.getElementById("tagPicker");
+    picker.innerHTML = tags.map(tag => `
+        <label class="tag-option">
+            <input
+                type="checkbox"
+                value="${tag.name}"
+                data-color="${tag.color}">
+            <span
+                class="tag-swatch"
+                style="background:${tag.color}">
+            </span>
+            ${tag.name}
+        </label>
+    `).join("");
     picker
         .querySelectorAll("input")
         .forEach(box => {
@@ -34,10 +36,20 @@ function getSelectedTags() {
         ...document.querySelectorAll(
             "#tagPicker input:checked"
         )
-    ].map(box => box.value);
+    ].map(box => ({
+        name: box.value,
+        color: box.dataset.color || "#2563eb"
+    }));
+}
+
+function getSelectedTagNames() {
+    // Convenience for callers that only need the names
+    // (e.g. the editor's "tag: <name>" payload).
+    return getSelectedTags().map(t => t.name);
 }
 
 window.BlogTags = {
     loadTagPicker,
-    getSelectedTags
+    getSelectedTags,
+    getSelectedTagNames
 };

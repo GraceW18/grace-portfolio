@@ -32,10 +32,30 @@ async function createTag(name, color) {
     });
 }
 
+async function fetchTags() {
+    return apiFetch("/api/tags");
+}
+
+async function updateTag(id, fields) {
+    return apiFetch(`/api/tags/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(fields)
+    });
+}
+
+async function deleteTag(id) {
+    return apiFetch(`/api/tags/${id}`, {
+        method: "DELETE"
+    });
+}
+
 window.BlogAPI = {
     fetchPosts,
     createPost,
     updatePost,
     deletePost,
-    createTag
-};
+    fetchTags,
+    createTag,
+    updateTag,
+    deleteTag
+}

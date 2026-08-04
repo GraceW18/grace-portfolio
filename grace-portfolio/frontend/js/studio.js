@@ -129,7 +129,7 @@ function renderDashboard() {
                     // later
                     break;
                 case "tags":
-                    // later
+                    TagManager.renderTagManager();
                     break;
                 case "about":
                     // later

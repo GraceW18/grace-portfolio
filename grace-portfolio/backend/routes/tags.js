@@ -67,4 +67,84 @@ router.post("/", verifyJWT, async (req, res, next) => {
     }
 });
 
+/*
+PUT /api/tags/:id
+Update an existing tag's name and/or color.
+(Admin only)
+*/
+router.put("/:id", verifyJWT, async (req, res, next) => {
+    const { id } = req.params;
+    let { name, color } = req.body || {};
+    name = (name || "").trim();
+    if (!name) {
+        return res.status(400).json({
+            error: "Tag name is required."
+        });
+    }
+    try {
+        // Don't allow the new name to collide with another tag
+        const clash = await db.query(
+            `
+            SELECT id
+            FROM tags
+            WHERE LOWER(name) = LOWER($1)
+              AND id <> $2
+            `,
+            [name, id]
+        );
+        if (clash.rows.length) {
+            return res.status(409).json({
+                error: "Another tag already uses that name."
+            });
+        }
+        const { rows } = await db.query(
+            `
+            UPDATE tags
+            SET name = $1,
+                color = COALESCE($2, color)
+            WHERE id = $3
+            RETURNING *;
+            `,
+            [name, color || null, id]
+        );
+        if (!rows.length) {
+            return res.status(404).json({
+                error: "Tag not found."
+            });
+        }
+        res.json(rows[0]);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
+/*
+DELETE /api/tags/:id
+Remove a tag.
+Cascades through post_tags via the FK ON DELETE CASCADE.
+(Admin only)
+*/
+router.delete("/:id", verifyJWT, async (req, res, next) => {
+    try {
+        const { rows } = await db.query(
+            `
+            DELETE FROM tags
+            WHERE id = $1
+            RETURNING *;
+            `,
+            [req.params.id]
+        );
+        if (!rows.length) {
+            return res.status(404).json({
+                error: "Tag not found."
+            });
+        }
+        res.json({ success: true, deleted: rows[0] });
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;

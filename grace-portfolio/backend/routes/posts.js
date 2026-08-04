@@ -24,32 +24,22 @@ router.get('/', async (_req, res, next) => {
   try {
     const { rows } = await db.query(`
     SELECT
-
         p.id,
         p.title,
         p.date,
         p.excerpt,
         p.content,
-
         COALESCE(
-
-            array_agg(t.name ORDER BY t.name)
-            FILTER (WHERE t.id IS NOT NULL),
-
-            '{}'
-
+            jsonb_agg(
+                jsonb_build_object('name', t.name, 'color', t.color)
+                ORDER BY t.name
+            ) FILTER (WHERE t.id IS NOT NULL),
+            '[]'::jsonb
         ) AS tags
-
     FROM posts p
-
-    LEFT JOIN post_tags pt
-    ON p.id = pt.post_id
-
-    LEFT JOIN tags t
-    ON pt.tag_id = t.id
-
+    LEFT JOIN post_tags pt ON p.id = pt.post_id
+    LEFT JOIN tags t ON pt.tag_id = t.id
     GROUP BY p.id
-
     ORDER BY p.created_at DESC;
     `);
     res.json(rows);
@@ -70,9 +60,11 @@ router.get('/:id', async (req, res, next) => {
                 p.excerpt,
                 p.content,
                 COALESCE(
-                    array_agg(t.name ORDER BY t.name)
-                    FILTER (WHERE t.id IS NOT NULL),
-                    '{}'
+                    jsonb_agg(
+                        jsonb_build_object('name', t.name, 'color', t.color)
+                        ORDER BY t.name
+                    ) FILTER (WHERE t.id IS NOT NULL),
+                    '[]'::jsonb
                 ) AS tags
             FROM posts p
             LEFT JOIN post_tags pt

@@ -28,27 +28,33 @@ async function loadArticle() {
 function renderArticle(post) {
     document.getElementById("article").innerHTML = `
     <div class="article-container">
-        <a href="#" id="backBtn" class="article-back">
-            ← Back
-        </a>
-        <h1 class="article-title">
-            ${post.title}
-        </h1>
-        <div class="article-meta">
-            ${post.date}
-        </div>
+        <a href="#" id="backBtn" class="article-back">← Back</a>
+        <h1 class="article-title">${post.title}</h1>
+        <div class="article-meta">${post.date}</div>
         <div class="article-tags">
-            ${post.tags.map(tag=>`
-            <span class="article-tag">
-                ${tag}
-            </span>
-            `).join("")}
+            ${(post.tags || []).map(tag => {
+                const name = tag.name ?? tag;
+                const color = tag.color || '#2563eb';
+                return `
+            <span
+                class="article-tag"
+                style="background:${hexToBg(color)};color:${color};border:1px solid ${color}33;">
+                ${name}
+            </span>`;
+            }).join("")}
         </div>
-        <div class="article-content">
-            ${marked.parse(post.content || "")}
-        </div>
+        <div class="article-content">${marked.parse(post.content || "")}</div>
     </div>
     `;
+}
+
+function hexToBg(hex) {
+    if (!hex || !/^#?([0-9a-f]{6})$/i.test(hex)) return "#eee";
+    const h = hex.replace("#", "");
+    const r = parseInt(h.slice(0, 2), 16);
+    const g = parseInt(h.slice(2, 4), 16);
+    const b = parseInt(h.slice(4, 6), 16);
+    return `rgba(${r},${g},${b},0.12)`;
 }
 
 window.addEventListener("scroll", () => {
