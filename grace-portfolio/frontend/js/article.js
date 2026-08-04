@@ -60,6 +60,13 @@ function hexToBg(hex) {
     return `rgba(${r},${g},${b},0.12)`;
 }
 
+function escapeAttr(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
+
 window.addEventListener("scroll", () => {
     const progress =
         document.querySelector(".read-progress");
