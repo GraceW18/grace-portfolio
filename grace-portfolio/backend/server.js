@@ -50,6 +50,7 @@ app.use('/api/auth',    require('./routes/auth'));
 app.use('/api/posts',   require('./routes/posts'));
 app.use('/api/tags',    tags);
 app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/about', require('./routes/about'));
 app.use('/api/contact', require('./routes/contact'));
 
 // ── Health check ─────────────────────────────────────────────────
