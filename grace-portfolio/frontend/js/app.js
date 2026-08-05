@@ -131,10 +131,10 @@ function showPage(id) {
     document.querySelectorAll('#page-' + id + ' .reveal').forEach(el => revealObs.observe(el));
     lucide.createIcons();
   }, 60);
-
   // Lazy-load data when switching to blog or library
   if (id === 'blog') loadPosts();
   if (id === 'library') loadReviews();
+  if (id === 'about') loadAbout();
 }
 
 // Init active nav
@@ -158,6 +158,88 @@ async function apiFetch(path, opts = {}) {
     throw new Error(err.error || res.statusText);
   }
   return res.json();
+}
+
+async function loadAbout() {
+  try {
+    const d = await apiFetch('/api/about');
+    console.log('about data:', d);
+    if (!d || !Object.keys(d).length) return; // keep hardcoded HTML as fallback
+    // Bio
+    console.log('rendering bio...');
+    const bioEl = document.querySelector('.about-bio');
+    if (bioEl && d.bio?.length)
+      bioEl.innerHTML = d.bio.map(p => `<p>${escapeHTML(p)}</p>`).join('');
+    // Skills
+    console.log('rendering skills...');
+    const SKILL_MAP = {languages:'Languages','frameworks':'Frameworks &amp; Libraries','tools':'Tools &amp; Platforms'};
+    if (d.skills) {
+      document.querySelectorAll('.skills-group').forEach((group, i) => {
+        const key = Object.keys(SKILL_MAP)[i];
+        if (!key || !d.skills[key]) return;
+        group.querySelector('.chips').innerHTML =
+          d.skills[key].map(s => `<span class="chip">${escapeHTML(s)}</span>`).join('');
+      });
+    }
+    // Currently — 4 cols
+    console.log('rendering currently...');
+    const nowGrid = document.querySelector('.now-grid');
+    const COL_KEYS = ['reading','listening','watching','working'];
+    const COL_LABELS = ['Reading','Listening to','Watching','Working On'];
+    const COL_ICONS  = ['book-open','music','tv','terminal'];
+    if (nowGrid && d.currently) {
+      nowGrid.innerHTML = COL_KEYS.map((key, i) => {
+        const entries = d.currently[key] || [];
+        return `<div class="now-col">
+          <div class="now-col-label">
+            <i data-lucide="${COL_ICONS[i]}" style="width:12px;height:12px;"></i> ${COL_LABELS[i]}
+          </div>
+          ${entries.map(e => {
+            const title = typeof e === 'string' ? e : e.title;
+            const sub   = typeof e === 'string' ? '' : e.sub;
+            return `<div class="now-entry">
+              ${sub ? `<div style="font-size:.67rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1px;">${escapeHTML(sub)}</div>` : ''}
+              <strong>${escapeHTML(title)}</strong>
+            </div>`;
+          }).join('')}
+        </div>`;
+      }).join('');
+      lucide.createIcons();
+    }
+    // Experience
+    console.log('rendering experience...');
+    const tlEl = document.querySelector('.timeline');
+    if (tlEl && d.experience?.length) {
+      const BADGE_CLASS = {Internship:'tb-work',Research:'tb-research',Policy:'tb-research',Hackathon:'tb-project',Education:'tb-research',Other:'tb-project'};
+      const existingEyebrow = tlEl.querySelector('.eyebrow').outerHTML;
+      tlEl.innerHTML = existingEyebrow + d.experience.map(e => `
+        <div class="tl-item reveal">
+          <div class="tl-date">${escapeHTML(e.date||'')}</div>
+          <div>
+            <span class="tl-badge ${BADGE_CLASS[e.badge]||'tb-project'}">${escapeHTML(e.badge||'')}</span>
+            <div class="tl-title">${escapeHTML(e.title||'')}</div>
+            <div class="tl-desc">${escapeHTML(e.desc||'')}</div>
+          </div>
+        </div>`).join('');
+        tlEl.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+    }
+    // Hobbies
+    console.log('rendering hobbies...');
+    const hobbyCards = document.querySelector('.hobby-cards');
+    console.log('hobbyCards el:', hobbyCards, 'hobbies:', d.hobbies);
+    if (hobbyCards && d.hobbies?.length) {
+      hobbyCards.innerHTML = d.hobbies.map((h, i) => `
+          <div class="hobby-card reveal" style="transition-delay:${.05*i}s">
+              <div class="hobby-card-icon"><i data-lucide="${escapeAttr(h.icon||'star')}" style="width:18px;height:18px;"></i></div>
+              <div class="hobby-card-name">${escapeHTML(h.name)}</div>
+              <div class="hobby-card-note">${escapeHTML(h.note||'')}</div>
+          </div>`).join('');
+      lucide.createIcons({ nameAttr: 'data-lucide', attrs: {}, nodes: [...hobbyCards.querySelectorAll('[data-lucide]')] });
+      hobbyCards.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+    }
+  } catch(err) {
+    console.error('loadAbout error:', err);
+  }
 }
 
 // ================================================================
