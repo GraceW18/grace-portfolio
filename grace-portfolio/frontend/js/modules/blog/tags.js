@@ -19,14 +19,6 @@ async function loadTagPicker() {
         .querySelectorAll("input")
         .forEach(box => {
             box.onchange = () => {
-                // Only allow one checked tag
-                picker
-                    .querySelectorAll("input")
-                    .forEach(other => {
-                        if (other !== box) {
-                            other.checked = false;
-                        }
-                    });
                 updatePreview();
             };
     });

@@ -90,40 +90,29 @@ router.get('/:id', async (req, res, next) => {
 
 // POST /api/posts — admin only
 router.post('/', verifyJWT, async (req, res, next) => {
-  const { title, date, tag, excerpt, content} = req.body || {};
-  if (!title || !date || !tag) {
-    return res.status(400).json({ error: 'title, date, and tag are required.' });
+  const { title, date, tags = [], excerpt, content} = req.body || {};
+  if (!title || !date || !tags.length) {
+    return res.status(400).json({ error: 'title, date, and at least one tag are required.' });
   }
-  // Check if the tag exists in the tags table
-  const { rows } = await db.query(
-  `
-  SELECT id
-  FROM tags
-  WHERE name = $1;
-  `,
-  [tag]
-  );
-
-  if (rows.length === 0) {
-    return res.status(400).json({
-      error: "Invalid tag."
-    });
-  }
-
   try {
     const { rows } = await db.query(
-      'INSERT INTO posts (title, date, tag, excerpt, content) VALUES ($1,$2,$3,$4) RETURNING *',
-      [title, date, tag, excerpt || '', content || '']
+      'INSERT INTO posts (title, date, tag, excerpt, content) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+      [title, date, tags[0], excerpt || '', content || '']
     );
-    await db.query(
-      `
-      INSERT INTO post_tags (post_id, tag_id)
-      VALUES ($1, $2);
-      `,
-      [rows[0].id, tagRows[0].id]
-  );
+    const postId = rows[0].id;
+    const { rows: tagRows } = await db.query(
+      `SELECT id, name FROM tags WHERE name = ANY($1::text[])`,
+      [tags]
+    );
+    for (const t of tagRows) {
+      await db.query(
+        'INSERT INTO post_tags (post_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+        [postId, t.id]
+      );
+    }
     res.status(201).json(rows[0]);
-  } catch (err) {
+  } 
+  catch (err) {
     next(err);
   }
 });
@@ -131,58 +120,29 @@ router.post('/', verifyJWT, async (req, res, next) => {
 // PUT /api/posts/:id — admin only
 router.put('/:id', verifyJWT, async (req, res, next) => {
     const { id } = req.params;
-    const { title, date, tag, excerpt, content } = req.body;
-    console.log("PUT tag received:", tag);
+    const { title, date, tags = [], excerpt, content } = req.body;
     try {
         const { rows } = await db.query(
-            `
-            UPDATE posts
-            SET
-                title = $1,
-                date = $2,
-                tag = $3,
-                excerpt = $4,
-                content = $5
-            WHERE id = $6
-            RETURNING *;
-            `,
-            [title, date, tag, excerpt, content, id]
+            `UPDATE posts SET title=$1, date=$2, tag=$3, excerpt=$4, content=$5
+             WHERE id=$6 RETURNING *;`,
+            [title, date, tags[0] || '', excerpt, content, id]
         );
-        // Remove existing tag relationships
-        await db.query(
-            `
-            DELETE FROM post_tags
-            WHERE post_id = $1;
-            `,
-            [id]
-        );
-        // Find the ID of the selected tag
-        const { rows: tagRows } = await db.query(
-            `
-            SELECT id
-            FROM tags
-            WHERE name = $1;
-            `,
-            [tag]
-        );
-        // Create the new relationship
-        if (tagRows.length) {
-          await db.query(
-              `
-              INSERT INTO post_tags (post_id, tag_id)
-              VALUES ($1, $2);
-              `,
-              [id, tagRows[0].id]
-          );
-        }
-        if (!rows.length) {
-            return res.status(404).json({
-                error: "Post not found."
-            });
+        if (!rows.length) return res.status(404).json({ error: "Post not found." });
+
+        await db.query(`DELETE FROM post_tags WHERE post_id = $1;`, [id]);
+        if (tags.length) {
+            const { rows: tagRows } = await db.query(
+                `SELECT id FROM tags WHERE name = ANY($1::text[])`, [tags]
+            );
+            for (const t of tagRows) {
+                await db.query(
+                    'INSERT INTO post_tags (post_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+                    [id, t.id]
+                );
+            }
         }
         res.json(rows[0]);
-    }
-    catch (err) {
+    } catch (err) {
         next(err);
     }
 });

@@ -132,8 +132,6 @@ async function publishPost() {
                 .getElementById("studio-content")
                 .dataset
                 .editingId;
-        console.log("Selected tags:", tags);
-        console.log("Sending tag:", tags[0]);
         if (editingId) {
             await BlogAPI.updatePost(
                 editingId,
@@ -142,7 +140,7 @@ async function publishPost() {
                     date,
                     excerpt,
                     content,
-                    tag: tags[0]
+                    tags
                 }
             );
             alert("Post updated!");
@@ -153,7 +151,7 @@ async function publishPost() {
                 date,
                 excerpt,
                 content,
-                tag: tags[0]
+                tags
             });
             alert("Post published!");
         }
