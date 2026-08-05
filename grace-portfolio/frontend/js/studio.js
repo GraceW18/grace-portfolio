@@ -135,7 +135,7 @@ function renderDashboard() {
                     AboutEditor.renderAboutEditor();
                     break;
                 case "messages":
-                    // later
+                    Messages.renderMessagesViewer();
                     break;
             }
         });

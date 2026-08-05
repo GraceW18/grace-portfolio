@@ -20,6 +20,29 @@
 
 const router = require('express').Router();
 const db     = require('../db/client');
+const verifyJWT = require('../middleware/verifyJWT');
+
+// ── GET /api/contact  (admin only)
+router.get('/', verifyJWT, async (req, res, next) => {
+  try {
+    const { rows } = await db.query(
+      'SELECT id, name, email, message, created_at FROM contact_messages ORDER BY created_at DESC'
+    );
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+}); 
+
+// Delete (admin only)
+router.delete('/:id', verifyJWT, async (req, res, next) => {
+  try {
+    await db.query('DELETE FROM contact_messages WHERE id = $1', [req.params.id]);
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.post('/', async (req, res, next) => {
   const { name, email, message } = req.body || {};
