@@ -132,7 +132,7 @@ function renderDashboard() {
                     TagManager.renderTagManager();
                     break;
                 case "about":
-                    // later
+                    AboutEditor.renderAboutEditor();
                     break;
                 case "messages":
                     // later
