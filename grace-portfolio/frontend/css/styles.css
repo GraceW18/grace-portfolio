@@ -278,7 +278,25 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.94);backdrop
 .bk-stars{font-size:.8rem;color:var(--indigo);font-weight:500;white-space:nowrap;}
 .bk-status{font-size:.67rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--subtle);margin-top:3px;white-space:nowrap;}
 .no-items{padding:48px;text-align:center;color:var(--muted);font-size:.87rem;border-top:1px solid var(--border);}
-
+.bk-cover {
+  width: 56px;
+  min-width: 56px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  margin-right: 4px;
+  align-self: center;
+}
+.bk-cover-empty {
+  background: var(--surface);
+}
+/* make .book-item flex so cover sits left of content */
+.book-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
 /* =============================================================
    CONTACT
    ============================================================= */

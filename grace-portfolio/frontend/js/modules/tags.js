@@ -3,24 +3,33 @@
  * Lists, creates, edits, and deletes tags.
  * Renders color chips inline so admins can see the live look.
  */
+let currentTagScope = "post";
+
 async function renderTagManager() {
     const content = document.getElementById("studio-content");
     content.innerHTML =
         StudioUI.pageHeader("Tags", "+ New Tag", "newTag")
-        + StudioUI.card(`
-            <div id="tagsTable">
-                ${StudioUI.loading("Loading tags...")}
-            </div>
-        `);
-
+        + `<div style="display:flex;gap:8px;margin-bottom:16px;">
+            <button class="tag-scope-tab active" data-scope="post">Blog Tags</button>
+            <button class="tag-scope-tab" data-scope="review">Library Tags</button>
+           </div>`
+        + StudioUI.card(`<div id="tagsTable">${StudioUI.loading("Loading tags...")}</div>`);
     document.getElementById("newTag").onclick = () => openTagForm();
+    document.querySelectorAll(".tag-scope-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".tag-scope-tab").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentTagScope = btn.dataset.scope;
+            loadTags();
+        });
+    });
     loadTags();
 }
 
 async function loadTags() {
     const table = document.getElementById("tagsTable");
     try {
-        const tags = await BlogAPI.fetchTags();
+        const tags = await apiFetch(`/api/tags?scope=${currentTagScope}`);
         renderTagTable(tags);
     } catch (err) {
         table.innerHTML = `<p style="color:var(--danger);">${escapeHTML(err.message)}</p>`;
@@ -180,9 +189,12 @@ function openTagForm(tag = null) {
         if (window.lucide) lucide.createIcons();
         grid.querySelectorAll(".icon-cell").forEach(cell => {
             cell.onclick = () => {
-                hidden.value = cell.dataset.icon;
-                nameEl.textContent = cell.dataset.icon;
-                preview.innerHTML = `<i data-lucide="${escapeAttr(cell.dataset.icon)}" style="width:13px;height:13px;"></i>`;
+                const kebab = cell.dataset.icon
+                    .replace(/([A-Z])/g, m => '-' + m.toLowerCase())
+                    .replace(/^-/, '');
+                hidden.value = kebab;
+                nameEl.textContent = kebab;
+                preview.innerHTML = `<i data-lucide="${escapeAttr(kebab)}" style="width:13px;height:13px;"></i>`;
                 if (window.lucide) lucide.createIcons();
                 renderIconGrid(query.value);
             };
@@ -200,7 +212,7 @@ function openTagForm(tag = null) {
             if (isEdit) {
                 await BlogAPI.updateTag(tag.id, { name, color, icon });
             } else {
-                await BlogAPI.createTag(name, color, icon);
+                await BlogAPI.createTag(name, color, icon, currentTagScope);
             }
             AdminUI.closeModal();
             loadTags();

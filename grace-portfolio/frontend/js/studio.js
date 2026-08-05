@@ -126,7 +126,7 @@ function renderDashboard() {
                     Blog.renderManager();
                     break;
                 case "library":
-                    // later
+                    LibraryManager.renderLibraryManager();
                     break;
                 case "tags":
                     TagManager.renderTagManager();

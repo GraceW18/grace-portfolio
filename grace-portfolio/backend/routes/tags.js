@@ -5,18 +5,17 @@ const verifyJWT = require("../middleware/verifyJWT");
 GET /api/tags
 Returns every tag alphabetically.
 */
-router.get("/", async (_req, res, next) => {
+router.get("/", async (req, res, next) => {
     try {
-        const { rows } = await db.query(`
-            SELECT *
-            FROM tags
-            ORDER BY name;
-        `);
+        const scope = req.query.scope;
+        const { rows } = await db.query(
+            scope
+                ? `SELECT * FROM tags WHERE scope = $1 ORDER BY name`
+                : `SELECT * FROM tags ORDER BY name`,
+            scope ? [scope] : []
+        );
         res.json(rows);
-    }
-    catch (err) {
-        next(err);
-    }
+    } catch (err) { next(err); }
 });
 
 /*
@@ -25,7 +24,7 @@ Create a new tag.
 (Admin only)
 */
 router.post("/", verifyJWT, async (req, res, next) => {
-    let { name, color, icon } = req.body || {};
+    let { name, color, icon, scope } = req.body || {};
     name = (name || "").trim();
     if (!name) {
         return res.status(400).json({
@@ -46,11 +45,11 @@ router.post("/", verifyJWT, async (req, res, next) => {
 
         const { rows } = await db.query(
             `
-            INSERT INTO tags(name, color, icon)
-            VALUES($1, $2, $3)
+            INSERT INTO tags(name, color, icon, scope)
+            VALUES($1, $2, $3, $4)
             RETURNING *;
             `,
-            [name, color || "#2563eb", icon || "tag"]
+            [name, color || "#2563eb", icon || "tag", scope || "post"]
         );
         res.status(201).json(rows[0]);
     }
@@ -66,7 +65,7 @@ Update an existing tag's name and/or color.
 */
 router.put("/:id", verifyJWT, async (req, res, next) => {
     const { id } = req.params;
-    let { name, color, icon } = req.body || {};
+    let { name, color, icon, scope } = req.body || {};
     name = (name || "").trim();
     if (!name) {
         return res.status(400).json({
@@ -94,11 +93,12 @@ router.put("/:id", verifyJWT, async (req, res, next) => {
             UPDATE tags
             SET name = $1,
                 color = COALESCE($2, color),
-                icon = COALESCE($3, icon)
-            WHERE id = $4
+                icon = COALESCE($3, icon),
+                scope = COALESCE($4, scope)
+            WHERE id = $5
             RETURNING *;
             `,
-            [ name, color || null, icon || null, id ]
+            [ name, color || null, icon || null, scope || null, id]
         );
         if (!rows.length) {
             return res.status(404).json({

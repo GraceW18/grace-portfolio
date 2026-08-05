@@ -22,13 +22,14 @@ async function deletePost(id) {
     });
 }
 
-async function createTag(name, color, icon) {
+async function createTag(name, color, icon, scope = "post") {
     return apiFetch("/api/tags", {
         method: "POST",
         body: JSON.stringify({
             name,
             color,
-            icon
+            icon,
+            scope
         })
     });
 }
@@ -50,13 +51,35 @@ async function deleteTag(id) {
     });
 }
 
+// Review API
+async function fetchReviews() {
+    return apiFetch("/api/reviews");
+}
+
+async function createReview(review) {
+    return apiFetch("/api/reviews", {
+        method: "POST",
+        body: JSON.stringify(review)
+    });
+}
+
+async function updateReview(id, review) {
+    return apiFetch(`/api/reviews/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(review)
+    });
+}
+
+async function deleteReview(id) {
+    return apiFetch(`/api/reviews/${id}`, { method: "DELETE" });
+}
+
+async function fetchReviewTags() {
+    return apiFetch("/api/tags?scope=review");
+}
+
 window.BlogAPI = {
-    fetchPosts,
-    createPost,
-    updatePost,
-    deletePost,
-    fetchTags,
-    createTag,
-    updateTag,
-    deleteTag
+    fetchPosts, createPost, updatePost, deletePost,
+    fetchTags, createTag, updateTag, deleteTag,
+    fetchReviews, createReview, updateReview, deleteReview, fetchReviewTags
 }

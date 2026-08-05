@@ -173,7 +173,7 @@ async function loadPosts() {
   // adds/edits/deletes the admin made since the last visit.
   // (Posts are cached — they don't change as often.)
   try {
-    const tags = await apiFetch('/api/tags').catch(() => []);
+    const tags = await apiFetch('/api/tags?scope=post').catch(() => []);
     tagsCache = tags;
     renderTagFilters(tags);
   } catch (e) {
@@ -335,6 +335,9 @@ async function loadReviews() {
   if (!list) return;
   list.innerHTML = '<div class="blog-loading">Loading library…</div>';
   try {
+    // Load tags for filter bar
+    const reviewTags = await apiFetch('/api/tags?scope=review').catch(() => []);
+    renderLibraryTagFilters(reviewTags);
     const data = await apiFetch('/api/reviews');
     reviewsCache = data;
     renderReviews(data);
@@ -343,27 +346,75 @@ async function loadReviews() {
   }
 }
 
-const typeBadgeCls = { book: 'bkt-book', paper: 'bkt-paper', article: 'bkt-article' };
-const typeLabel = { book: 'Book', paper: 'Paper', article: 'Article' };
+function renderLibraryTagFilters(tags) {
+  const container = document.getElementById('libraryTagFilters');
+  if (!container) return;
+  container.innerHTML = tags.map(t => `
+    <button class="filter-btn" data-lgenre="${escapeAttr(t.name.toLowerCase())}"
+      style="--tag-color:${escapeAttr(t.color)};">
+      <i data-lucide="${escapeAttr(t.icon||'tag')}" style="width:11px;height:11px;"></i>
+      ${escapeHTML(t.name)}
+    </button>`).join('');
+  container.querySelectorAll('[data-lgenre]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (this.classList.contains('active') && this.dataset.lgenre !== 'all') {
+        this.classList.remove('active'); activeGenre = 'all';
+      } else {
+        document.querySelectorAll('[data-lgenre]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        activeGenre = this.dataset.lgenre;
+      }
+      filterLibrary();
+    });
+  });
+  if (window.lucide) lucide.createIcons();
+}
 
 function renderReviews(reviews) {
   const list = document.getElementById('libraryList');
   const nb = document.getElementById('noBooks');
   if (!list) return;
   if (!reviews.length) { list.innerHTML = ''; if (nb) nb.style.display = 'block'; return; }
-  const genres = r => (r.genre || '').split(',').map(g => g.trim()).filter(Boolean)
-    .map(g => `<span class="bk-genre-badge">${g}</span>`).join('');
-  list.innerHTML = reviews.map(r => `
-    <div class="book-item" data-ltype="${r.type}" data-lgenre="${(r.genre || '').toLowerCase()}" data-ltext="${(r.title + ' ' + r.author + ' ' + r.review + ' ' + r.genre).toLowerCase()}">
-      <div class="book-accent-bar ba-${r.accent || 'indigo'}"></div>
-      <div class="book-main">
-        <div class="bk-header"><span class="bk-title">${r.title}</span><span class="bk-author">${r.author}</span></div>
-        <div class="bk-meta"><span class="bk-type-badge ${typeBadgeCls[r.type] || ''}">${typeLabel[r.type] || r.type}</span>${genres(r)}</div>
-        <div class="bk-review">${r.review}</div>
-      </div>
-      <div class="bk-rating-col"><div class="bk-stars">${r.rating || ''}</div><div class="bk-status">${r.status || ''}</div></div>
-    </div>`).join('');
+  const typeLabel = { book: 'Book', paper: 'Paper', article: 'Article' };
+  list.innerHTML = reviews.map(r => {
+    const tagNames = (r.tags || []).map(t => (t.name ?? t).toLowerCase());
+    const tagChips = (r.tags || []).map(t => {
+      const color = t.color || '#2563eb';
+      const icon  = t.icon  || 'tag';
+      return `<span class="bk-genre-badge b-tag"
+        style="background:${hexToBg(color)};color:${color};border:1px solid ${color}33;">
+        <i data-lucide="${escapeAttr(icon)}" style="width:10px;height:10px;vertical-align:-1px;margin-right:2px;"></i>
+        ${escapeHTML(t.name ?? t)}
+      </span>`;
+    }).join('');
+    const typeBadge = `<span class="bk-type-badge bkt-${r.type||'book'}">${typeLabel[r.type]||r.type}</span>`;
+    const cover = r.cover_url
+      ? `<img class="bk-cover" src="${escapeAttr(r.cover_url)}" alt="${escapeAttr(r.title)}" onerror="this.style.display='none'">`
+      : `<div class="bk-cover bk-cover-empty"></div>`;
+    return `
+      <div class="book-item"
+        data-ltype="${r.type}"
+        data-lgenre="${tagNames.join(',')}"
+        data-ltext="${(r.title+' '+r.author+' '+r.review).toLowerCase()}">
+        <div class="book-accent-bar ba-${r.accent||'indigo'}"></div>
+        ${cover}
+        <div class="book-main">
+          <div class="bk-header">
+            <span class="bk-title">${escapeHTML(r.title)}</span>
+            <span class="bk-author">${escapeHTML(r.author||'')}</span>
+          </div>
+          <div class="bk-meta">${typeBadge}${tagChips}</div>
+          <div class="bk-review">${escapeHTML(r.review||'')}</div>
+        </div>
+        <div class="bk-rating-col">
+          <div class="bk-stars">${escapeHTML(r.rating||'')}</div>
+          <div class="bk-status">${escapeHTML(r.status||'')}</div>
+        </div>
+      </div>`;
+  }).join('');
+
   if (nb) nb.style.display = 'none';
+  lucide.createIcons();
   filterLibrary();
 }
 

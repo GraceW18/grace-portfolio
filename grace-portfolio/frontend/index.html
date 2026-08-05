@@ -229,12 +229,14 @@
     <h2 class="section-title reveal">Things I've built.</h2>
     <div class="controls-bar reveal">
       <div class="filter-group">
+        <!---
         <button class="filter-btn active" data-filter="all"><i data-lucide="layout-grid" style="width:11px;height:11px;"></i> All</button>
         <button class="filter-btn" data-filter="ai"><i data-lucide="cpu" style="width:11px;height:11px;"></i> AI / ML</button>
         <button class="filter-btn" data-filter="systems"><i data-lucide="database" style="width:11px;height:11px;"></i> Systems</button>
         <button class="filter-btn" data-filter="hardware"><i data-lucide="circuit-board" style="width:11px;height:11px;"></i> Hardware</button>
         <button class="filter-btn" data-filter="research"><i data-lucide="microscope" style="width:11px;height:11px;"></i> Research</button>
         <button class="filter-btn" data-filter="policy"><i data-lucide="scroll" style="width:11px;height:11px;"></i> Policy</button>
+      -->
       </div>
       <div class="search-wrap">
         <i data-lucide="search" class="s-icon" style="width:12px;height:12px;"></i>
@@ -296,13 +298,7 @@
     <h2 class="section-title reveal">Blog.</h2>
     <p class="section-intro reveal">Notes on software, AI, research, and things I'm thinking about.</p>
     <div class="controls-bar reveal">
-      <div class="filter-group" data-blog-filters>
-        <button class="filter-btn active" data-bfilter="all"><i data-lucide="filter" style="width:11px;height:11px;"></i> All</button>
-        <button class="filter-btn" data-bfilter="ai"><i data-lucide="cpu" style="width:11px;height:11px;"></i> AI</button>
-        <button class="filter-btn" data-bfilter="policy"><i data-lucide="scroll" style="width:11px;height:11px;"></i> Policy</button>
-        <button class="filter-btn" data-bfilter="research"><i data-lucide="microscope" style="width:11px;height:11px;"></i> Research</button>
-        <button class="filter-btn" data-bfilter="hardware"><i data-lucide="circuit-board" style="width:11px;height:11px;"></i> Hardware</button>
-      </div>
+      <div class="filter-group" data-blog-filters></div>
       <div class="search-wrap">
         <i data-lucide="search" class="s-icon" style="width:12px;height:12px;"></i>
         <input class="search-input" type="text" placeholder="Search posts…" id="blogSearch" oninput="filterBlog()"/>
@@ -328,10 +324,7 @@
         <button class="filter-btn" data-lfilter="paper"><i data-lucide="file-text" style="width:11px;height:11px;"></i> Papers</button>
         <button class="filter-btn" data-lfilter="article"><i data-lucide="newspaper" style="width:11px;height:11px;"></i> Articles</button>
         <span class="filter-divider"></span>
-        <button class="filter-btn" data-lgenre="ai">AI</button>
-        <button class="filter-btn" data-lgenre="policy">Policy</button>
-        <button class="filter-btn" data-lgenre="nonfiction">Nonfiction</button>
-        <button class="filter-btn" data-lgenre="biography">Biography</button>
+        <div id="libraryTagFilters" style="display:contents;"></div>
       </div>
       <div class="search-wrap">
         <i data-lucide="search" class="s-icon" style="width:12px;height:12px;"></i>
