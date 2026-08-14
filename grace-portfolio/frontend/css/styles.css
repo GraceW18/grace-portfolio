@@ -12,8 +12,8 @@
   --border:     #C0C4D4;   /* border                       */
   --border2:    #A8ADCA;   /* stronger border              */
 
-  /* PRIMARY ACCENT: amber / burnt orange (editorial warmth) */
-  --indigo:     #C25A10;   /* amber accent — all interactive hits */
+  /* PRIMARY ACCENT */
+  --indigo:     #6610c2;
   --indigo-bg:  #FEF3E8;   /* amber tint                   */
 
   /* SECONDARY ACCENTS */
@@ -21,7 +21,7 @@
   --teal-bg:    #F0FDF9;
   --green:      #16A34A;
   --green-bg:   #F0FDF4;
-  --amber:      #92400E;   /* darker amber for .tb-research */
+  --amber:      #450e92;   /* darker purple for .tb-research */
   --amber-bg:   #FFFBEB;
 
   --max:    1080px;
@@ -40,7 +40,7 @@ html.dark {
   --faint:     #171830;
   --border:    #2E3155;
   --border2:   #3E4275;
-  --indigo:    #E8843A;
+  --indigo:    #883ae8;
   --indigo-bg: #2A1A0A;
   --teal:      #2DD4BF;
   --teal-bg:   #0F2A2A;
