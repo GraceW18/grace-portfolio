@@ -21,7 +21,7 @@
   --teal-bg:    #F0FDF9;
   --green:      #16A34A;
   --green-bg:   #F0FDF4;
-  --amber:      #450e92;   /* darker purple for .tb-research */
+  --amber:      #b8641b;   /* darker amber for .tb-research */
   --amber-bg:   #FFFBEB;
 
   --max:    1080px;
@@ -40,7 +40,7 @@ html.dark {
   --faint:     #171830;
   --border:    #2E3155;
   --border2:   #3E4275;
-  --indigo:    #883ae8;
+  --indigo:    #bb8ff1;
   --indigo-bg: #2A1A0A;
   --teal:      #2DD4BF;
   --teal-bg:   #0F2A2A;
