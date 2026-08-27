@@ -592,13 +592,19 @@ html.dark .icon-moon { display: none; }
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   margin: 0 0 14px;
+  background: var(--faint);
+  border: 1.5px solid var(--card-border, var(--border2));
+  padding: 18px 20px 20px;
+  position: relative;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 .project-card:hover {
   transform: translateY(-3px);
-  box-shadow: 6px 6px 0 0 rgba(30, 33, 69, 0.1);
+  box-shadow: 6px 6px 0 0 var(--card-shadow, rgba(30, 33, 69, 0.1));
 }
-.project-card[data-accent="indigo"]:hover { border-left-color: var(--indigo); }
-.project-card[data-accent="teal"]:hover   { border-left-color: var(--teal); }
+/* Accent fallbacks when a card has no tag-derived border color */
+.project-card[data-accent="indigo"] { --card-border: var(--indigo); }
+.project-card[data-accent="teal"]   { --card-border: var(--teal); }
 .project-card.hidden { display: none; }
 
 .p-type {
