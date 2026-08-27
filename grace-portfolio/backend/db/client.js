@@ -18,30 +18,35 @@
 
 const { Pool } = require('pg');
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL environment variable is not set.');
+let pool = null;
+
+function getPool() {
+  if (pool) return pool;
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error('DATABASE_URL environment variable is not set.');
+  }
+  const url = new URL(connectionString);
+  pool = new Pool({
+    user: url.username,
+    password: url.password,
+    host: url.hostname,
+    port: Number(url.port),
+    database: url.pathname.slice(1),
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
+  pool.on('error', (err) => {
+    console.error('Unexpected pg pool error:', err);
+  });
+  return pool;
 }
-const connectionString = process.env.DATABASE_URL;
 
-const url = new URL(connectionString);
-
-console.log("Username:", url.username);
-console.log("Password:", url.password);
-console.log("Host:", url.hostname);
-
-const pool = new Pool({
-  user: url.username,
-  password: url.password,
-  host: url.hostname,
-  port: Number(url.port),
-  database: url.pathname.slice(1),
-  ssl: {
-    rejectUnauthorized: false,
+module.exports = new Proxy({}, {
+  get(_target, prop) {
+    const p = getPool();
+    const value = p[prop];
+    return typeof value === 'function' ? value.bind(p) : value;
   },
 });
-
-pool.on('error', (err) => {
-  console.error('Unexpected pg pool error:', err);
-});
-
-module.exports = pool;
