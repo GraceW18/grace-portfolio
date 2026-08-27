@@ -13,7 +13,7 @@ const db = require('../db/client');
 const VALID_ACCENTS = ['indigo', 'teal'];
 
 // GET /api/projects
-router.get('/', async (_req, resizeBy, next) => {
+router.get('/', async (_req, res, next) => {
     try {
         const { rows } = await db.query(`
             SELECT
@@ -38,7 +38,7 @@ router.get('/', async (_req, resizeBy, next) => {
 });
 
 // POST /api/projects
-router.get('/', verifyJWT, async (req, res, next) => {
+router.post('/', verifyJWT, async (req, res, next) => {
     const {
         title, summary, problem, role, tech_stack,
         results, tradeoffs, challenge, type_label,
@@ -66,7 +66,7 @@ router.get('/', verifyJWT, async (req, res, next) => {
             );
             for (const t of tagRows) {
                 await db.query(
-                    'INSET INTO project_tags (project_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+                    'INSERT INTO project_tags (project_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
                     [projectId, t.id]
                 );
             }

@@ -1,5 +1,4 @@
 /* Grace Studio */
-
 document.addEventListener("DOMContentLoaded", initializeStudio);
 function initializeStudio() {
     const token = localStorage.getItem("jwt");
@@ -12,7 +11,6 @@ function initializeStudio() {
 }
 
 /* Login Screen */
-
 function renderLogin() {
     const app = document.getElementById("studio-app");
     app.innerHTML = `

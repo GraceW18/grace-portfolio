@@ -485,7 +485,6 @@ async function loadProjects() {
     renderProjectTagFilters(projectTags);
   } catch(e) { /* non-fatal: keep existing filter buttons if any */}
   if (projectsCache) return
-  renderProjects(projectsCache);
   grid.innerHTML = '<div class="blog-loading">Loading projects...</div>';
   try {
     const data = await apiFetch('/api/projects');
@@ -503,8 +502,7 @@ function renderProjectTagFilters(tags) {
   const html = [
     `<button class="filter-btn active" data-pfilter="all">
       <i data-lucide="layout-grid" style="width:11px;height:11px;"></i> All
-      </button>`, 
-      ...tags.map(t => `
+      </button>`, ...tags.map(t => `
         <button class="filter-btn" data-pfilter="${escapeAttr(t.name)}" style="--tag-color:${escapeAttr(t.color)};">
         <i data-lucide="${escapeAttr(t.icon || 'tag')}" style="width:11px;height:11px;"></i>
         ${escapeHTML(t.name)}
@@ -524,23 +522,25 @@ if (window.lucide) lucide.createIcons();
 
 function renderProjects(projects) {
   const grid = document.getElementById('projectsGrid');
+  const nr = document.getElementById('noResultsTemplate') || null;
   if (!grid) return;
   if (!projects.length) {
     grid.innerHTML = '<div class="no-results">No projects yet - check back soon.</div>';
     return;
   }
   grid.innerHTML = projects.map(p => {
-    const tagName = (p.tags || []).map(t => t.name);
+    const tagNames = (p.tags || []).map(t => t.name);
     const links = Array.isArray(p.links) ? p.links : [];
     const chips = (p.tech_stack || '').split(',').map(s => s.trim()).filter(Boolean).map(s => `<span class="tech-chip">${escapeHTML(s)}</span>`).join('');
     const linkEls = links.length ? links.map(l => `<a href="${escapeAttr(l.url)}" target="_blank" rel="noopener" class="p-link">
       ${escapeHTML(l.label || 'Link')} <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i></a>`).join('') : `<span style="font-size:.72rem;color:var(--subtle);">Private project</span>`;
-      const searchText = [p.title, p.summary, p.problem, p.role, p.tech_stack, p.type_label, ...tagNames].filter(Boolean).join('').toLowerCase();
-      return `<div class="project-card" data-accent="${escapeAttr(p.accent || 'indigo')}" data-tags="${escapeAttr(tagNames.join(' '))}" data-text="${escapeAttr(searchText)}"> ${p.type_label ? `<div class="p-type">${escapeHTML(p.type_label)}</div>` : ''}
+      const searchText = [p.title, p.summary, p.problem, p.role, p.tech_stack, p.type_label, ...tagNames].filter(Boolean).join(' ').toLowerCase();
+      return `<div class="project-card" data-accent="${escapeAttr(p.accent || 'indigo')}" data-tags="${escapeAttr(tagNames.join(','))}" data-text="${escapeAttr(searchText)}"> ${p.type_label ? `<div class="p-type">${escapeHTML(p.type_label)}</div>` : ''}
       <div class="p-title">${escapeHTML(p.title)}</div> ${p.summary ? `<div class="p-desc">${escapeHTML(p.summary)}</div>` : ''}
       ${p.problem ? `<div class="p-section">
         <div class="p-section-label">The Problem</div>
           <div class="p-section-body">${escapeHTML(p.problem)}</div>
+        </div>
         </div>` : ''}
       ${(p.role || chips) ? `<div class="p-section">
         <div class="p-section-label">Role &amp; Tech Stack</div>
@@ -550,14 +550,17 @@ function renderProjects(projects) {
       ${p.results ? `<div class="p-section">
         <div class="p-section-label">Results</div>
           <div class="p-section-body">${escapeHTML(p.results)}</div>
+        </div>
         </div>` : ''}
       ${p.tradeoffs ? `<div class="p-section">
         <div class="p-section-label">Trade-offs</div>
           <div class="p-section-body">${escapeHTML(p.tradeoffs)}</div>
+        </div>
         </div>` : ''}
       ${p.challenge ? `<div class="p-section">
         <div class="p-section-label">Technical Challenge</div>
           <div class="p-section-body">${escapeHTML(p.challenge)}</div>
+        </div>
         </div>` : ''}
       <div class="p-links">${linkEls}</div>
       </div>`;
@@ -578,8 +581,8 @@ function filterProjects() {
   });
   const nr = document.getElementById('noProjects');
   if (nr) nr.style.display = any ? 'none' : 'block';
+  document.getElementById('projectSearch')?.addEventListener('input', filterProjects);
 }
-document.getElementById('projectSearch')?.addEventListener('input', filterProjects);
 
 // ================================================================
 // CONTACT FORM

@@ -9,7 +9,7 @@ async function renderProjectsManager() {
     loadProjectsTable();
 }
 
-async function loadPorjectsTable() {
+async function loadProjectsTable() {
     const table = document.getElementById("projectsTable");
     try {
         const projects = await BlogAPI.fetchProjects();
@@ -92,7 +92,7 @@ async function renderProjectEditor(project = null) {
                 <input id="pjType" value="${pAttr(project?.type_label || '')}">
 
                 <label>The Problem <span style="color:var(--muted);font-weight:400;">what issue this solves, or why you built it</span></label>
-                <input id="pjProblem" rows="3">${pEsc(project?.problem || '')}</textarea> 
+                <textarea id="pjProblem" rows="3">${pEsc(project?.problem || '')}</textarea>
                 
                 <label>Your Role <span style="color:var(--muted);font-weight:400;">your specific contributions</span></label>
                 <textarea id="pjRole" rows="3">${pEsc(project?.role || '')}</textarea>
@@ -111,7 +111,7 @@ async function renderProjectEditor(project = null) {
 
                 <label>Accent Color</label>
                 <select id="pjAccent">
-                    ${['indigo', 'text'].map(a =>
+                    ${['indigo', 'teal'].map(a =>
                         `<option value="${a}" ${project?.accent===a?'selected':''}>${a.charAt(0).toUpperCase()+a.slice(1)}</option>`
                     ).join('')}
                 </select>
@@ -142,7 +142,7 @@ async function renderProjectEditor(project = null) {
         row.style.cssText = "display:flex;gap:8px;margin-bottom:6px;";
         row.innerHTML = `
             <input class="pjLinkLabel" placeholder="Label (e.g. GitHub)" value="${pAttr(label)}" style="flex:1;">
-            <input class="pjLinkUrl" placeholder="https://..." vlaue="${pAttr(url)}" style=flex:2;">
+            <input class="pjLinkUrl" placeholder="https://..." value="${pAttr(url)}" style="flex:2;">
             <button type="button" class="pjRemoveLink danger"> X </button>
         `;
         row.querySelector(".pjRemoveLink").onclick = () => row.remove();
@@ -163,7 +163,7 @@ async function renderProjectEditor(project = null) {
                 <label style="display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;">
                     <input type="checkbox" value="${pAttr(t.name)}">
                     <span class="b-tag" style="background:${hexToBgP(t.color)};color:${t.color};border:1px solid ${t.color}33;">
-                        <i data-lucide="${pAttr(t.icon||'tag')}" style="width:11px;height:11px;vertical-align:-1px;margin-right:3px;"</i>
+                        <i data-lucide="${pAttr(t.icon||'tag')}" style="width:11px;height:11px;vertical-align:-1px;margin-right:3px;"></i>
                         ${pEsc(t.name)}
                     </span>
                 </label>`).join("");
@@ -224,7 +224,7 @@ async function publishProject() {
 
     const links = [...document.querySelectorAll("#pjLinks .pj-link-row")].map(row => ({
         label: row.querySelector(".pjLinkLabel").value.trim(),
-        url: row.querySelector(".pjLinkedUrl").value.trim()
+        url: row.querySelector(".pjLinkUrl").value.trim()
     })).filter(l => l.label && l.url);
 
     if (!title) { alert("Project title is required."); return; }
