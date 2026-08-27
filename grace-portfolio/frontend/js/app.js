@@ -533,8 +533,8 @@ function renderProjects(projects) {
     const tagColors = (p.tags || []).map(t => t.color).filter(Boolean);
     const links = Array.isArray(p.links) ? p.links : [];
     const chips = (p.tech_stack || '').split(',').map(s => s.trim()).filter(Boolean).map(s => `<span class="tech-chip">${escapeHTML(s)}</span>`).join('');
-    const linkEls = links.length ? links.map(l => `<a href="${escapeAttr(l.url)}" target="_blank" rel="noopener" class="p-link">
-      ${escapeHTML(l.label || 'Link')} <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i></a>`).join('') : `<span style="font-size:.72rem;color:var(--subtle);">Private project</span>`;
+    const linkEls = links.map(l => `<a href="${escapeAttr(l.url)}" target="_blank" rel="noopener" class="p-link">
+      ${escapeHTML(l.label || 'Link')} <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i></a>`).join('');
       const searchText = [p.title, p.summary, p.problem, p.role, p.tech_stack, p.type_label, ...tagNames].filter(Boolean).join(' ').toLowerCase();
       // Outline the card with the first tag's color so projects visually group by tag.
       // Falls back to the accent CSS variable (indigo / teal) when no tags exist.
@@ -568,7 +568,10 @@ function renderProjects(projects) {
           <div class="p-section-body">${escapeHTML(p.challenge)}</div>
         </div>
         </div>` : ''}
-      <div class="p-links">${linkEls}</div>
+      ${links.length ? `<div class="p-section">
+        <div class="p-section-label">Links</div>
+          <div class="p-links">${linkEls}</div>
+        </div>` : ''}
       </div>`;
   }).join('') + '<div class="no-results" id="noProjects" style="display:none;">No projects match that filter.</div>';
   if (window.lucide) lucide.createIcons();

@@ -659,7 +659,7 @@ html.dark .icon-moon { display: none; }
   border: 1px solid color-mix(in srgb, var(--card-border, var(--border2)) 35%, transparent);
   color: var(--ink2);
 }
-.p-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: auto; padding-top: 6px; }
+.p-links { display: flex; flex-wrap: wrap; gap: 14px; }
 .p-link {
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 0.7rem; font-weight: 600;
