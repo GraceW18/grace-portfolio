@@ -132,7 +132,7 @@ function renderDashboard() {
                     LibraryManager.renderLibraryManager();
                     break;
                 case "projects":
-                    renderProjectsManager.renderProjectsManager();
+                    ProjectsManager.renderProjectsManager();
                     break;
                 case "tags":
                     TagManager.renderTagManager();
