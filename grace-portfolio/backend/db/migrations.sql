@@ -148,9 +148,14 @@ CREATE TABLE IF NOT EXISTS tags (
   id         SERIAL PRIMARY KEY,
   name       TEXT    NOT NULL UNIQUE,
   color      TEXT    DEFAULT '#2563eb',
+  icon       TEXT    DEFAULT 'tag',
+  scope      TEXT    DEFAULT 'post',
   created_at TIMESTAMPTZ DEFAULT NOW()
-  icon       TEXT    DEFAULT 'tag'
 );
+
+ALTER TABLE tags ADD COLUMN IF NOT EXISTS icon TEXT DEFAULT 'tag';
+ALTER TABLE tags ADD COLUMN IF NOT EXISTS scope TEXT DEFAULT 'post';
+
 
 -- =============================================================
 -- Seed data — initial tags
