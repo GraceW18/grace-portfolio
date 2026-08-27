@@ -84,8 +84,6 @@
 
   <!-- HERO -->
   <div class="wrap hero-wrap">
-    <!-- Animated crane SVG stage -->
-    <div class="hero-svg-stage" id="heroSvgStage" aria-hidden="true"></div>
 
     <div class="hero-grid">
       <!-- LEFT: intro copy -->
@@ -113,7 +111,7 @@
         <h1 class="hero-name">
           Grace<br/><em>Wang.</em>
         </h1>
-        <!-- Portrait — replace images/me.png with your photo (square crop, min 600×600px) -->
+        <!-- Portrait — replace images/me.png with photo (square crop, min 600×600px) -->
         <div class="hero-photo">
           <img src="images/me.png" alt="Grace Wang" onerror="this.parentElement.style.display='none'"/>
         </div>
@@ -264,27 +262,11 @@
     <h2 class="section-title reveal">Things I've built.</h2>
 
     <div class="controls-bar reveal" style="margin-top:28px;">
-      <div class="filter-group">
-        <!-- Uncomment to enable category filters:
-        <button class="filter-btn active" data-filter="all">
+      <div class="filter-group" data-project-filters>
+        
+        <button class="filter-btn active" data-pfilter="all">
           <i data-lucide="layout-grid" style="width:11px;height:11px;"></i> All
         </button>
-        <button class="filter-btn" data-filter="ai">
-          <i data-lucide="cpu" style="width:11px;height:11px;"></i> AI / ML
-        </button>
-        <button class="filter-btn" data-filter="systems">
-          <i data-lucide="database" style="width:11px;height:11px;"></i> Systems
-        </button>
-        <button class="filter-btn" data-filter="hardware">
-          <i data-lucide="circuit-board" style="width:11px;height:11px;"></i> Hardware
-        </button>
-        <button class="filter-btn" data-filter="research">
-          <i data-lucide="microscope" style="width:11px;height:11px;"></i> Research
-        </button>
-        <button class="filter-btn" data-filter="policy">
-          <i data-lucide="scroll" style="width:11px;height:11px;"></i> Policy
-        </button>
-        -->
       </div>
       <div class="search-wrap">
         <i data-lucide="search" class="s-icon" style="width:12px;height:12px;"></i>
@@ -293,86 +275,7 @@
     </div>
 
     <div class="projects-grid" id="projectsGrid">
-      <div class="project-card" data-accent="indigo" data-tags="ai" data-text="ai travel planning google sprinternship bigquery vertex multi-agent">
-        <div class="p-type">AI / Backend · Google</div>
-        <div class="p-title">Multi-Agent AI Travel Planner</div>
-        <div class="p-desc">Conversational travel planner with memory persistence and personalized itinerary generation. Shipped activities, dining, and itinerary modules end-to-end on a cross-functional Sprinternship team.</div>
-        <div class="tech-chips">
-          <span class="tech-chip">Python</span><span class="tech-chip">Google ADK</span>
-          <span class="tech-chip">BigQuery</span><span class="tech-chip">Vertex AI</span><span class="tech-chip">A2UI</span>
-        </div>
-        <div class="p-links"><span style="font-size:.72rem;color:var(--subtle);">Private — Google project</span></div>
-      </div>
-
-      <div class="project-card" data-accent="teal" data-tags="research" data-text="sparse tensor benchmark cp-als numpy python pytest research">
-        <div class="p-type">Research / Systems · Georgia Tech</div>
-        <div class="p-title">Sparse Tensor Benchmark Suite</div>
-        <div class="p-desc">Extended open-source Python benchmark suite for CP-ALS decomposition on sparse 3rd-order tensors. Cut complexity from O(I·J·K·R) to O(nnz·R). Verified &lt;10% reconstruction error on 20×20×20 rank-3 tensors.</div>
-        <div class="tech-chips">
-          <span class="tech-chip">Python</span><span class="tech-chip">pytest</span>
-          <span class="tech-chip">NumPy</span><span class="tech-chip">Sparse Arrays</span>
-        </div>
-        <div class="p-links">
-          <a href="https://github.com/GraceW18" target="_blank" class="p-link">
-            GitHub <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="project-card" data-accent="indigo" data-tags="systems" data-text="nosql database java hashmap avl tree lru eviction dynamodb">
-        <div class="p-type">Systems / Data Structures</div>
-        <div class="p-title">NoSQL Database Engine</div>
-        <div class="p-desc">Custom Java NoSQL engine modeled after Amazon DynamoDB. Linear-probing HashMap, AVL TreeMap with O(log n + k) range queries, partitioned database with LRU eviction and peak occupancy analysis.</div>
-        <div class="tech-chips">
-          <span class="tech-chip">Java</span><span class="tech-chip">HashMap</span>
-          <span class="tech-chip">AVL Tree</span><span class="tech-chip">LRU Cache</span>
-        </div>
-        <div class="p-links"><span style="font-size:.72rem;color:var(--subtle);">Coursework — CS 1332</span></div>
-      </div>
-
-      <div class="project-card" data-accent="teal" data-tags="hardware ai" data-text="vibroacoustic therapy tmj iot flask chart.js arduino medtech hackathon">
-        <div class="p-type">IoT / Hardware · MedTech Hack (5th)</div>
-        <div class="p-title">Vibroacoustic Therapy Device</div>
-        <div class="p-desc">Wearable for TMJ disorder, ~90% cost reduction vs. clinical devices. Python/Flask backend ingesting real-time IoT sensor data, Chart.js biometric dashboard tracking 30-day treatment cycles.</div>
-        <div class="tech-chips">
-          <span class="tech-chip">Python</span><span class="tech-chip">Flask</span>
-          <span class="tech-chip">Chart.js</span><span class="tech-chip">Arduino</span><span class="tech-chip">IoT</span>
-        </div>
-        <div class="p-links">
-          <a href="https://github.com/GraceW18/vibroacoustic-therapy-device" target="_blank" class="p-link">
-            GitHub <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="project-card" data-accent="indigo" data-tags="ai" data-text="prospera investing gemini chatbot budgeting finance web app">
-        <div class="p-type">Web App / AI</div>
-        <div class="p-title">Prospera</div>
-        <div class="p-desc">Web app providing personalized investing suggestions based on current funds and goals. Built-in Gemini chatbot named Penny, tailored toward budgeting and financial literacy for first-time investors.</div>
-        <div class="tech-chips">
-          <span class="tech-chip">HTML/JS</span><span class="tech-chip">Gemini API</span><span class="tech-chip">Finance</span>
-        </div>
-        <div class="p-links">
-          <a href="https://github.com/etumanova/prospera" target="_blank" class="p-link">
-            GitHub <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="project-card" data-accent="teal" data-tags="policy" data-text="ai disinformation policy critical infrastructure cisa federal jspg journal">
-        <div class="p-type">Policy / Writing · Published</div>
-        <div class="p-title">AI Disinformation Policy Memo</div>
-        <div class="p-desc">Peer-reviewed memo on AI-enhanced disinformation threats to CISA-defined critical infrastructure. 30+ sources, 5 case studies, 3 evidence-based federal intervention proposals. Accepted to JSPG Winter issue.</div>
-        <div class="tech-chips">
-          <span class="tech-chip">Policy Analysis</span><span class="tech-chip">AI Ethics</span><span class="tech-chip">Cybersecurity</span>
-        </div>
-        <div class="p-links">
-          <a href="https://www.sciencepolicyjournal.org/article_1038126_jspg280107.html" target="_blank" class="p-link">
-            Publication <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i>
-          </a>
-        </div>
-      </div>
-
+        <div class="blog-loading">Loading projects...</div>
       <div class="no-results" id="noProjects" style="display:none;">No projects match that filter.</div>
     </div>
   </div>

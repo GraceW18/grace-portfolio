@@ -78,8 +78,37 @@ async function fetchReviewTags() {
     return apiFetch("/api/tags?scope=review");
 }
 
+// Project API
+async function fetchProjects() {
+    return apiFetch("/api/projects");
+}
+
+async function createProject(project) {
+    return apiFetch("/api/projects", {
+        method: "POST",
+        body: JSON.stringify(project)
+    });
+}
+
+async function updateProject(id, project) {
+    return apiFetch(`/api/projects/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(project)
+    });
+}
+
+async function deleteProject(id) {
+    return apiFetch(`/api/projects/${id}`, {
+        method: "DELETE" });
+}
+
+async function fetchProjectTags() {
+    return apiFetch("/api/tags?scope=project");
+}
+
 window.BlogAPI = {
     fetchPosts, createPost, updatePost, deletePost,
     fetchTags, createTag, updateTag, deleteTag,
-    fetchReviews, createReview, updateReview, deleteReview, fetchReviewTags
+    fetchReviews, createReview, updateReview, deleteReview, fetchReviewTags,
+    fetchProjects, createProject, updateProject, deleteProject, fetchProjectTags
 }

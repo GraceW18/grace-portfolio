@@ -89,6 +89,9 @@ function renderDashboard() {
                 <button data-page="library">
                     Library
                 </button>
+                <button data-page="projects">
+                    Projects
+                </button>
                 <button data-page="tags">
                     Tags
                 </button>
@@ -127,6 +130,9 @@ function renderDashboard() {
                     break;
                 case "library":
                     LibraryManager.renderLibraryManager();
+                    break;
+                case "projects":
+                    renderProjectsManager.renderProjectsManager();
                     break;
                 case "tags":
                     TagManager.renderTagManager();

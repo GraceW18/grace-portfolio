@@ -32,6 +32,10 @@ function renderDashboardHome() {
                 <span>Library Entries</span>
             </div>
             <div class="overview-card">
+                <h2 id="stat-projects">--</h2>
+                <span>Projects</span>
+            </div>
+            <div class="overview-card">
                 <h2 id="stat-tags">--</h2>
                 <span>Tags</span>
             </div>
@@ -48,6 +52,9 @@ function renderDashboardHome() {
                 </button>
                 <button id="newBookBtn">
                     Add Library Entry
+                </button>
+                <button id="newProjectBtn">
+                    Add Project
                 </button>
                 <button id="editCurrentBtn">
                     Edit Currently
@@ -72,10 +79,12 @@ async function loadDashboardStats() {
         const posts = await apiFetch("/api/posts");
         const tags = await apiFetch("/api/tags");
         const books = await apiFetch("/api/reviews");
+        const projects = await apiFetch("/api/projects");
         document.getElementById("stat-posts").textContent =
             posts.length;
         document.getElementById("stat-books").textContent =
             books.length;
+        document.getElementById("stat-projects").textContent = projects.length;
         document.getElementById("stat-tags").textContent =
             tags.length;
         document.getElementById("stat-messages").textContent =
