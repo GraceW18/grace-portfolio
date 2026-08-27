@@ -577,26 +577,30 @@ html.dark .icon-moon { display: none; }
 .search-input:focus { border-color: var(--indigo); width: 230px; }
 .s-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--subtle); }
 
-/* Projects grid - Masonry Flat */
+/* Projects grid - responsive flat grid (auto-fit, equal-height rows) */
 .projects-grid {
-  column-count: 3;
-  column-gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
   background: transparent;
   border: none;
   border-radius: 0;
 }
 .project-card {
-  display: inline-block;
+  /* flex column so the link row can pin to the bottom and the section cells stack evenly */
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;
-  margin: 0 0 14px;
+  margin: 0; /* gap on the parent grid handles spacing */
   background: var(--faint);
   border: 1.5px solid var(--card-border, var(--border2));
   padding: 18px 20px 20px;
   position: relative;
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  /* Safety nets against runaway content */
+  min-width: 0;            /* allow flex/grid item to shrink below content size */
+  overflow-wrap: anywhere; /* break long unbreakable strings (URLs, tag names) */
+  word-break: break-word;
 }
 .project-card:hover {
   transform: translateY(-3px);
@@ -618,25 +622,44 @@ html.dark .icon-moon { display: none; }
   font-style: italic; font-size: 1.1rem; font-weight: 500;
   color: var(--ink); line-height: 1.22; margin-bottom: 9px;
 }
-.p-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.65; margin-bottom: 13px; }
+.p-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.65; margin-bottom: 12px; }
 
-/* Structured detail sections*/
-.p-section { margin-bottom: 13px;}
-.p-section-label { 
+/* Structured detail sections — each one is its own outlined cell inside the card,
+   tinted with the same --card-border so the family relationship reads at a glance. */
+.p-section {
+  margin-bottom: 10px;
+  padding: 9px 12px 10px;
+  border: 1px solid color-mix(in srgb, var(--card-border, var(--border2)) 45%, transparent);
+  background: color-mix(in srgb, var(--card-border, var(--border2)) 6%, transparent);
+  /* graceful fallback for browsers without color-mix: still inherits the page bg */
+}
+.p-section:last-of-type { margin-bottom: 0; }
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .p-section {
+    border: 1px solid var(--border2);
+    background: var(--faint);
+  }
+}
+.p-section-label {
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.6rem; font-weight: 600;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--subtle);
+  font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--card-border, var(--subtle));
   margin-bottom: 4px;
+  display: inline-block;
+  padding: 1px 6px 2px;
+  border: 1px solid color-mix(in srgb, var(--card-border, var(--border2)) 35%, transparent);
 }
 .p-section-body { font-size: 0.78rem; color: var(--ink2); line-height: 1.6; }
 .tech-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; margin-bottom: 0; }
 .tech-chip {
   font-size: 0.64rem; font-weight: 500;
   padding: 2px 7px; border-radius: 0;
-  background: transparent; border: 1px solid var(--border); color: var(--ink2);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--card-border, var(--border2)) 35%, transparent);
+  color: var(--ink2);
 }
-.p-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 4px; }
+.p-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: auto; padding-top: 6px; }
 .p-link {
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 0.7rem; font-weight: 600;
